@@ -8,8 +8,8 @@ header = ['user_id','item_id','rating','timestamp']
 df = pd.read_csv('ml-100k/u.data',sep='\t',names=header)
 #print df
 
-n_users = df.user_id.unique().shape[0]
-n_items = df.item_id.unique().shape[0]
+n_users = df.user_id.unique().shape[0]   # 用户数目
+n_items = df.item_id.unique().shape[0]   # 物品数量
 
 print 'Number of users =' + str(n_users) + ' | Number of movies = ' + str(n_items)
 
