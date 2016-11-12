@@ -22,8 +22,17 @@ plt.ylabel(u'体重',fontproperties=font)
 
 ```
 
+## Error
 
+```python
+print(classification_report(y, answer, target_names=['thin', 'fat']))
+```
 
+计算正确率,召回率出错
+
+ValueError: Mix type of y not allowed, got types set(['continuous', 'multiclass'])
+
+因为两个参数有一个被视为连续性数据
 
 
 
