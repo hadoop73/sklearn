@@ -65,4 +65,5 @@ print np.mean(ans==y_train)
 ''' 准确率与召回率 '''
 precision,recall,thresholds = precision_recall_curve(y_train,clf.predict(x_train))
 ans = clf.predict_proba(x)[:,1]
+print ans
 print classification_report(y,ans,target_names=['thin','fat'])
