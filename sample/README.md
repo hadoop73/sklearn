@@ -13,13 +13,14 @@
 
 * [神经网络][5]
 
-
+* [特征工程][6]
 
  [1]: ./knn/README.md
  [2]: ./knn
  [3]: ./decisionTree
  [4]: ./svm
  [5]: ./neural
+ [6]: ./feature
 
 
 

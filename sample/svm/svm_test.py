@@ -16,6 +16,8 @@ x = np.array(data)
 labels = np.array(labels)
 y = np.zeros(labels.shape)
 y[labels == 'fat'] = 1
+
+''' 交叉验证的分割数据 '''
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.0)
 
 h = .02
@@ -26,6 +28,7 @@ xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
                      np.arange(y_min, y_max, h))
 
 ''''' SVM '''
+''' 选择不同的核函数进行模型学习 '''
 # title for the plots  
 titles = ['LinearSVC (linear kernel)',
           'SVC with polynomial (degree 3) kernel',
