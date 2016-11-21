@@ -1,5 +1,5 @@
 
-Scikit-learn 中文手册
+## Scikit-learn 中文手册
 
 http://sklearn.lzjqsdd.com/
 
@@ -50,12 +50,25 @@ sudo apt-get install python-tk
 
 
 
+## 构建虚拟环境
+
+利用 Pycharm 可以继承本地的环境
+
+![enter description here][1]
+
+**启动虚拟环境**
+```
+cd ~/env2.7
+source ./bin/activate
+```
+
+**退出虚拟环境**
+```
+deactivate
+```
 
 
+ 
 
 
-
-
- [1]: http://blog.csdn.net/tao_627/article/details/44004541
-
-
+  [1]: ./images/1479741888781.jpg "1479741888781.jpg"
