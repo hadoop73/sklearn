@@ -52,6 +52,8 @@ sudo apt-get install python-tk
 
 ## 构建虚拟环境
 
+[Python 虚拟环境：Virtualenv](1)
+
 利用 Pycharm 可以继承本地的环境
 
 ![enter description here][1]
@@ -72,3 +74,4 @@ deactivate
 
 
   [1]: ./images/1479741888781.jpg "1479741888781.jpg"
+  [2]: http://liuzhijun.iteye.com/blog/1872241
