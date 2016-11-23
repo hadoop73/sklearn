@@ -45,10 +45,10 @@ pip install py4j
 
 <h2 id="id3">WordsCount</h2>
 
-[Spark 下单词统计](2)
+[Spark 下单词统计](pySpark.ipynb)
 
  [1]: http://blog.csdn.net/a819825294/article/details/51782773
- [2]: pySpark.ipynb
+
 
 
 
