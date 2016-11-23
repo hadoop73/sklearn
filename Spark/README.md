@@ -4,7 +4,7 @@
 
 - [Spark shell 启动](#id1)
 - [PySpark 环境配置](#id2)
-
+- [WordsCount](#id3)
 
 <h2 id="id1">Spark shell 启动</h2>
 在 Spark 的安装目录下,bin/pyspark 运行 Python 版本的 Spark shell
@@ -48,7 +48,7 @@ pip install py4j
 [Spark 下单词统计](2)
 
  [1]: http://blog.csdn.net/a819825294/article/details/51782773
- [2]: /pySpark.ipynb
+ [2]: ./pySpark.ipynb
 
 
 
