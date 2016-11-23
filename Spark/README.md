@@ -1,6 +1,12 @@
 
 
-##  Spark 启动
+# Spark 入门及应用
+
+- [Spark shell 启动](#id1)
+- [PySpark 环境配置](#id2)
+
+
+<h2 id="id1">Spark shell 启动</h2>
 在 Spark 的安装目录下,bin/pyspark 运行 Python 版本的 Spark shell
 
 
@@ -14,7 +20,13 @@
 接。 shell 启动时已经自动创建了一个 SparkContext 对象，是一个叫作 sc 的变量
 
 
-##  引入 PySpark
+<h2 id="id2">PySpark 环境配置</h2>
+
+- [python 下安装相关包](#h321)
+
+- [Errors](#h322)
+
+<h3 id="h321">python 下安装相关包</h3>
 
 [PySpark 安装入门](1)
 
@@ -24,20 +36,19 @@
 hadoop@master:~/.local/lib/python2.7/site-packages$ sudo cp -r ~/spark-2.0.1-bin-hadoop2.7/python/pyspark/ .
 ```
 
-
-
-##  Errors
+<h3 id="h322">Errors</h3>
 
 py4j 错误
 ```
 pip install py4j
 ```
 
+<h2 id="h3">WordsCount</h2>
 
-
+[Spark 下单词统计](2)
 
  [1]: http://blog.csdn.net/a819825294/article/details/51782773
-
+ [2]: /pySpark.ipynb
 
 
 
