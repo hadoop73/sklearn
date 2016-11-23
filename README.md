@@ -69,9 +69,31 @@ source ./bin/activate
 deactivate
 ```
 
+**虚拟环境中运行 ipython**
+
+先在虚拟环境中安装 ipython
+```
+pip install ipython
+```
+
+再对 ipython 启动进行设置
+
+[Running iPython cleanly inside a virtualenv](4)
+
+```
+alias ipy="python -c 'import IPython; IPython.terminal.ipapp.launch_new_instance()'"
+ipy notebook # 启动 ipython notebook
+```
+
+## Python 学习
+
+[Python 学习之](3)
+
 
  
 
 
   [1]: ./images/1479741888781.jpg "1479741888781.jpg"
   [2]: http://liuzhijun.iteye.com/blog/1872241
+  [3]: ./python
+  [4]: https://coderwall.com/p/xdox9a/running-ipython-cleanly-inside-a-virtualenv
