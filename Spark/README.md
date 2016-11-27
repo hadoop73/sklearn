@@ -36,14 +36,25 @@
 hadoop@master:~/.local/lib/python2.7/site-packages$ sudo cp -r ~/spark-2.0.1-bin-hadoop2.7/python/pyspark/ .
 ```
 
-<h3 id="h322">Errors</h3>
+Errors
 
 py4j 错误
 ```
 pip install py4j
 ```
 
-<h2 id="id3">WordsCount</h2>
+
+KeyError: 'SPARK_HOME'
+
+```
+from pyspark import SparkContext
+import os
+os.environ["SPARK_HOME"] = "/home/hadoop/spark-2.0.1-bin-hadoop2.7"   #KeyError: 'SPARK_HOME'
+sc=SparkContext(appName='Test')
+```
+
+
+WordsCount
 
 [Spark 下单词统计](pySpark.ipynb)
 
