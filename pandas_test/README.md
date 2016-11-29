@@ -5,8 +5,17 @@
 
 [Python数据处理：Pandas模块的 12 种实用技巧][1]
 
+- [pandas 的数据结构](#h21)
+- [操作](#h22)
 
-##  pandas 的数据结构
+<h2 id="h21">pandas 的数据结构</h2>
+
+- [Series](#id1)
+
+- [DataFrame](#id2)
+
+- [索引对象](#id3)
+
 
 <h3 id="id1">Series</h3>
 
@@ -16,141 +25,37 @@
 
 ```
 obj = Series([4,7,-5,3])
+obj1 = Series([4,7,-5,3],index=['d','b','a','c'])
+```
+接受字典创建,Series 算术运算会自动对其不同索引的数据
+
+
+<h3 id="id2">DataFrame</h3>
+
+表格型数据结构,含有一组有序的列,每列可以是不同的值类,DataFame 既有行索引也有列索引
+
 ```
 
-```ipynb
-{
- "cells": [
-  {
-   "cell_type": "code",
-   "execution_count": 9,
-   "metadata": {
-    "collapsed": false
-   },
-   "outputs": [],
-   "source": [
-    "import pandas as pd\n",
-    "from pandas import *"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 3,
-   "metadata": {
-    "collapsed": true
-   },
-   "outputs": [],
-   "source": [
-    "obj = Series([4,7,-5,3])"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 8,
-   "metadata": {
-    "collapsed": false
-   },
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "0    4\n",
-       "1    7\n",
-       "2   -5\n",
-       "3    3\n",
-       "dtype: int64"
-      ]
-     },
-     "execution_count": 8,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "obj"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 6,
-   "metadata": {
-    "collapsed": false
-   },
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "array([ 4,  7, -5,  3])"
-      ]
-     },
-     "execution_count": 6,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "obj.values"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 7,
-   "metadata": {
-    "collapsed": false
-   },
-   "outputs": [
-    {
-     "data": {
-      "text/plain": [
-       "RangeIndex(start=0, stop=4, step=1)"
-      ]
-     },
-     "execution_count": 7,
-     "metadata": {},
-     "output_type": "execute_result"
-    }
-   ],
-   "source": [
-    "obj.index"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "collapsed": true
-   },
-   "outputs": [],
-   "source": []
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python 2",
-   "language": "python",
-   "name": "python2"
-  },
-  "language_info": {
-   "codemirror_mode": {
-    "name": "ipython",
-    "version": 2
-   },
-   "file_extension": ".py",
-   "mimetype": "text/x-python",
-   "name": "python",
-   "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython2",
-   "version": "2.7.12"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 1
-}
 ```
 
 
+<h3 id="id3">索引对象</h3>
+负责管理轴标签和其他元数据,Index对象不可以修改
 
 
+<h2 id="h22">操作</h2>
+
+
+<h3 id="h23">删除</h3>
+删除某条轴上的项,默认删除行,用 axis=1 指定删除列
+
+```
+obj.drop(['d','c'],axis=1)
+```
+
+##  pandas
+
+[读写操作以及数据处理](read_write.ipynb)
 
 
 
