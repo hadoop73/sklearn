@@ -52,7 +52,14 @@ sudo apt-get install python-tk
 
 ## 构建虚拟环境
 
-[Python 虚拟环境：Virtualenv](1)
+```
+# 首先安装 virtualenv
+sudo pip install virtualenv
+# 再用 virtualenv 创建版本
+virtualenv ~/env
+```
+
+[Python 虚拟环境：Virtualenv](http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/001432712108300322c61f256c74803b43bfd65c6f8d0d0000)
 
 利用 Pycharm 可以继承本地的环境
 
