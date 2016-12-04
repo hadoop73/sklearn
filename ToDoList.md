@@ -26,3 +26,11 @@
 ##  神经网络
 
 
+协同过滤,LR,SVM
+
+L0,L1 正则化
+
+hadoop,Spark,Hive
+
+XGDBT,KD树
+
