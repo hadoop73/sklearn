@@ -34,3 +34,4 @@ hadoop,Spark,Hive
 
 XGDBT,KD树
 
+[常见面试之机器学习算法思想简单梳理](http://www.cnblogs.com/tornadomeet/p/3395593.html)
