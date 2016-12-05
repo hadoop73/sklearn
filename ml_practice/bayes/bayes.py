@@ -18,8 +18,14 @@ def createVocabList(dataSet):
         vocabSet = vocabSet | set(document)
     return list(vocabSet)
 
-
-
+# 将单词表生成一个 0,1 表
+def setOfWords2Vec(vocabList, inputSet):
+    returnVec = [0]*len(vocabList)
+    for word in inputSet:
+        if word in vocabList:
+            returnVec[vocabList.index(word)] = 1
+        else: print "the word: %s is not in my Vocabulary!" % word
+    return returnVec
 
 
 
