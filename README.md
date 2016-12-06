@@ -1,5 +1,17 @@
 
-## Scikit-learn 中文手册
+#  机器学习之路
+
+
+- [Scikit-learn 中文手册](#id1)
+
+- [构建虚拟环境](#id2)
+
+- [Python 学习](#id3)
+
+- [牛人 blog](#id4)
+
+
+<h2 id="id1">Scikit-learn 中文手册</h2>
 
 http://sklearn.lzjqsdd.com/
 
@@ -50,7 +62,7 @@ sudo apt-get install python-tk
 
 
 
-## 构建虚拟环境
+<h2 id="id2">构建虚拟环境</h2>
 
 ```
 # 首先安装 virtualenv
@@ -103,12 +115,16 @@ alias ipy="python -c 'import IPython; IPython.terminal.ipapp.launch_new_instance
 ipy notebook # 启动 ipython notebook
 ```
 
-## Python 学习
+<h2 id="id3">Python 学习</h2>
 
 [Python 学习之](3)
 
 
- 
+<h2 id="id4">牛人 blog</h2>
+
+[Bryan__的专栏](http://blog.csdn.net/bryan__)
+
+[止战。机器学习](http://www.cnblogs.com/zhizhan/tag/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/)
 
 
   [1]: ./images/1479741888781.jpg "1479741888781.jpg"
