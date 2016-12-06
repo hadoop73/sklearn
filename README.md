@@ -76,6 +76,17 @@ source ./bin/activate
 deactivate
 ```
 
+
+[使用 virtualenvwrapper](http://blog.csdn.net/luckytanggu/article/details/51592091)
+
+创建不同的虚拟环境，并进行管理;在 pycharm 中通过路经指定具体的python版本解释器
+
+```
+pip install virtualenvwrapper
+
+```
+
+
 **虚拟环境中运行 ipython**
 
 先在虚拟环境中安装 ipython
