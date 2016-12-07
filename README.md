@@ -10,6 +10,7 @@
 
 - [牛人 blog](#id4)
 
+- [XGBOOST 安装使用](#id5)
 
 <h2 id="id1">Scikit-learn 中文手册</h2>
 
@@ -126,6 +127,29 @@ ipy notebook # 启动 ipython notebook
 
 [止战。机器学习](http://www.cnblogs.com/zhizhan/tag/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/)
 
+
+
+<h2 id="id5">XGBOOST 安装使用</h2>
+
+[官网](https://xgboost.readthedocs.io/en/latest/build.html)
+
+[XGBOOST installation](https://github.com/dmlc/xgboost/blob/master/doc/python/python_intro.md)
+
+```
+git clone --recursive https://github.com/dmlc/xgboost
+cd xgboost; make -j4
+
+```
+
+To install XGBoost, do the following:
+
+- Run make in the root directory of the project
+
+- In the python-package directory, run
+
+```
+python setup.py install
+```
 
   [1]: ./images/1479741888781.jpg "1479741888781.jpg"
   [2]: http://liuzhijun.iteye.com/blog/1872241
