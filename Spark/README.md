@@ -58,38 +58,13 @@ WordsCount
 
 [Spark 下单词统计](pySpark.ipynb)
 
- [1]: http://blog.csdn.net/a819825294/article/details/51782773
+##  SSH 免密码登陆
 
+[SSH原理与运用（1）：远程登录](http://blog.jobbole.com/107483/)
 
+先产生 .ssh/id_dsa.pub 公钥,再拷贝到用户主机
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```
+ssh-keygen
+ssh-copy-id user@host  # 也可以只写主机
+```
