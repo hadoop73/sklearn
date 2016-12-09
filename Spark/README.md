@@ -68,3 +68,26 @@ WordsCount
 ssh-keygen
 ssh-copy-id user@host  # 也可以只写主机
 ```
+
+
+##  Spark DataFrame
+
+[A Tale of Three Apache Spark APIs: RDDs, DataFrames, and Datasets](https://databricks.com/blog/2016/07/14/a-tale-of-three-apache-spark-apis-rdds-dataframes-and-datasets.html)
+
+[7. 使用 Spark DataFrame 进行大数据分析](http://www.tuicool.com/articles/veUze27)
+
+[平易近人、兼容并蓄——Spark SQL 1.3.0概览](http://www.csdn.net/article/2015-04-03/2824407)
+
+##  Spark Streaming
+
+
+##  优化
+
+[Spark性能优化指南——基础篇](https://zhuanlan.zhihu.com/p/21922826)
+
+[Spark性能优化指南——高级篇](https://zhuanlan.zhihu.com/p/22024169)
+
+[数据倾斜是多么痛？spark作业/面试/调优必备秘籍](http://sanwen.net/a/gqkotbo.html)
+
+
+
