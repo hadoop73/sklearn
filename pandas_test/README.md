@@ -37,6 +37,27 @@ obj1 = Series([4,7,-5,3],index=['d','b','a','c'])
 ```
 
 ```
+- 选择列
+
+    - df[['a','b']]
+
+- 选择行
+
+    - df.head(),默认5行;
+    - df.head(3),选择3行
+    - df.loc([0:6]),选择0-5行
+
+- 删除列
+
+    - df.drop(['a'])
+
+
+- 为没有列名称的数据添加名字
+    - pd.read_csv('../data',name=['a','b'])
+
+- 重命名列名
+
+    - df.rename(columns={'a':'ra','b':'rb'})
 
 
 <h3 id="id3">索引对象</h3>
