@@ -17,7 +17,7 @@ if __name__ == "__main__":
     #re.split(r'(?:,|;|\s)\s*', line)  #x.split(' ')) \
     counts = lines.flatMap(lambda x: re.split(r'(?:\W)\W*',x)) \
                   .map(lambda x: (x,1)) \
-                  . reduceByKey(add)
+                  .reduceByKey(add)
     output = counts.collect()
     for (word,count) in output:
         print "%s: %i"  %(word,count)
