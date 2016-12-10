@@ -3,6 +3,7 @@
 
 -  [RDD 理解](#id1)
 
+-  [Spark 优化](#id2)
 
 
 
@@ -53,6 +54,32 @@ Action类型的操作：
 
 -  窄依赖，只依赖父 RDD 一个或部分 Partition，包括 map 和 union
 -  宽依赖，依赖父 RDD 的所有 Partion，包括 groupBy 和 join
+
+
+
+<h2 id="id2">Spark  优化</h2>
+
+[Spark性能优化指南——基础篇](https://zhuanlan.zhihu.com/p/21922826)
+
+[Spark性能优化指南——高级篇](https://zhuanlan.zhihu.com/p/22024169)
+
+-  避免创建重复 RDD
+
+-  尽量复用同一个 RDD
+
+```
+# 错误做法
+rdd1 = sc.testFile("")
+rdd2 = rdd1.map(...)
+rdd1.reduceByKey(..)
+rdd2.map(..)
+
+#  实际上 rdd2 只是 rdd1 的又一次变换，不需要重建
+rdd1.reduceByKey(..)
+rdd1.map(..) # 把 rdd2 和 第一次 map 写到一起
+```
+-  对多次使用的 RDD 进行持久化
+
 
 
 
