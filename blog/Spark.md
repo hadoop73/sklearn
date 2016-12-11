@@ -105,7 +105,7 @@ Spark 集群采用主从结构,一个节点负责中央协调,协调各个分布
 	执行器启动后,会向驱动进程注册自己.每个执行器节点代表一个处理任务或存储 RDD 数据的进场
 	Spark 驱动器根据当前的执行器节点集合,把任务基于数据位置分配给合适的执行器进场;执行完了会把数据缓存起来
 
-Spark 应用的运行时信息通过网页界面呈现,默认端口 4040
+Spark 应用的运行时信息通过网页界面呈现,默认端口 4040 (集群管理器网页界面:http://master:8080)
 
 
 **执行器节点**
@@ -134,6 +134,61 @@ spark-submit 将应用提交到集群管理器上.并负责连接到相应的集
 -  驱动器程序执行应用中的操作,并把工作以任务的形式发送到执行器进程
 -  任务在执行器程序中进行计算并保存结果
 -  驱动程序 main() 方法退出,或者调用 SparkContext.stop(),驱动器程序终止执行器进程,通过集群管理器释放资源
+
+**Spark-submit**
+
+如果在调用 Spark-submit 时,没有别的参数时,Spark 程序只会在本地执行.提交时可以将**集群地址**和**执行器进场大小**作为参数
+
+```
+bin/spark-submit --master spark://host:7077 --executor-memory 10g my_script.py
+```
+`--master` 标记集群 URL,spark:// 表示使用独立模式
+
+选项参数可以分为两类:
+
+-  调度信息,比如希望为作业申请的资源
+
+-  运行时依赖,--py-Files,--jars
+
+
+spark-submit 运行通过 --conf pro=value 设置 SparkConf 配置选项
+
+**资源分配**
+
+-  每个执行器进程内存
+	
+	`--executor-memory` 参数配置,默认 1GB,最大内存(默认 8GB)
+
+-  占用核心总数的最大值
+
+	`--total-executorcores` 参数设置,可以在配置文件中设置 spark.cores.max 的值
+	`--num-executors` 设置固定数量的执行器节点,默认值为 2
+	`--executor-cores` 设置每个执行器进场从 YARN 中占用的核心数目
+
+
+**Hadoop YARN**
+
+设置指向 Hadoop 配置目录的环境变量,spark-submit 指向一个特殊的主节点 URL 提交作业即可
+
+```
+export HADOOP_CONF_DIR="..."
+spark-submit --master yarn yourapp
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
