@@ -12,6 +12,9 @@
 
 - [XGBOOST 安装使用](#id5)
 
+
+- [Matplotlib 处理乱码](#id6)
+
 <h2 id="id1">Scikit-learn 中文手册</h2>
 
 http://sklearn.lzjqsdd.com/
@@ -140,6 +143,12 @@ git clone --recursive https://github.com/dmlc/xgboost
 cd xgboost; make -j4
 
 ```
+
+
+<h2 id="id6">matplotlib 中文乱码</h2>
+
+
+[处理乱码](sample/knn/)
 
 To install XGBoost, do the following:
 
