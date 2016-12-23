@@ -144,12 +144,6 @@ cd xgboost; make -j4
 
 ```
 
-
-<h2 id="id6">matplotlib 中文乱码</h2>
-
-
-[处理乱码](sample/knn/)
-
 To install XGBoost, do the following:
 
 - Run make in the root directory of the project
@@ -159,6 +153,15 @@ To install XGBoost, do the following:
 ```
 python setup.py install
 ```
+
+
+
+<h2 id="id6">matplotlib 中文乱码</h2>
+
+
+[处理乱码](sample/knn/)
+
+
 
   [1]: ./images/1479741888781.jpg "1479741888781.jpg"
   [2]: http://liuzhijun.iteye.com/blog/1872241
