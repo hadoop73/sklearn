@@ -29,8 +29,10 @@ ax = ['id','avail_amount','circ_interest','consume_amount','credit_amount','prep
 
 new_bill_train_mean['id'] = new_bill_train_mean.index
 df = new_bill_train_mean[ax]
+#df = DataFrame(df.values)
+#df.columns = ax
 
-df.to_csv('../data/bill_train.csv',index=None)
+df.to_csv('../data/train/bill_train.csv',index=None)
 
 
 bill_test = pd.read_csv("../../pcredit/test/bill_detail_test.txt",header=None)
