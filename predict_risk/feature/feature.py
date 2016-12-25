@@ -86,7 +86,6 @@ loan_time.columns = ['userid', 'loan_time']
 loan_time.index = loan_time['userid']
 loan_time.drop('userid',
                axis = 1,
-
                inplace = True)
 print loan_time.head(5)
 
@@ -107,7 +106,7 @@ loan_data['time'] = loan_data['loan_time'] - loan_data['tm_encode_3']
 category_col = ['sex', 'occupation', 'education', 'marriage', 'household']
 def set_dummies(data, colname):
     for col in colname:
-        data[col] = data[col].astype('category')
+        data[col].astype('category')
         dummy = pd.get_dummies(data[col])
         dummy = dummy.add_prefix('{}#'.format(col))
         data.drop(col,
