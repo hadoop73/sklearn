@@ -6,8 +6,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
 
 
-def getDatas():
-    loan_data = pd.read_csv("../data/train_data.csv")
+def getDatas(dir='train_data'):
+    loan_data = pd.read_csv("../data/{}.csv".format(dir))
 
     loan_data.index = loan_data['userid']
     loan_data.drop('userid',
