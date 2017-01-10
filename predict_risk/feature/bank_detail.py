@@ -29,35 +29,7 @@ dfun['sub'] = dfun['examount'][0]-dfun['examount'][1]
 
 dfun.columns = ['examount#0','examount#1','sub']
 
-#  删除空缺数据
-dfun = dfun.dropna()
-
-#  对 new_bill_data_mean 的所有列数据进行标签编码
-from sklearn.preprocessing import LabelEncoder
-le = LabelEncoder()
-cols = dfun.columns
-def transforLabel(datas,cols):
-    for col in cols:
-        data = datas[col]
-        le.fit(data)
-        datas[col] = le.transform(data)
-    return datas
-bank_label_data = transforLabel(dfun,cols)
-
-#  构建哑变量
-#print bill_label_data.head()
-cols = bank_label_data.columns
-def dummyData(datas,cols):
-    for col in cols:
-        s = pd.cut(datas[col],20)
-        d = pd.get_dummies(s)
-        d.columns = ["{}#{}".format(col,i) for i in range(20)]
-        datas.drop(col,axis = 1,inplace = True)
-        datas = datas.join(d)
-    return datas
-bank_dummy_data = dummyData(bank_label_data.copy(),cols)
-
-bank_dummy_data.to_csv('../data/train/bank_dummy_data.csv')
+dfun.to_csv('../data/train/bank_detail.csv')
 
 
 

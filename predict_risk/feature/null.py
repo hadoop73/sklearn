@@ -17,6 +17,18 @@ user_info_test = pd.read_csv("../../pcredit/test/user_info_test.txt",header=None
 user_info_test.columns = names
 user_test = pd.pivot_table(user_info_test,index=["userid"],values=names)
 
+
+def overdue():
+    # overdue_train，这是我们模型所要拟合的目标
+    target = pd.read_csv('../../pcredit/train/overdue_train.txt',
+                         header=None)
+    target.columns = ['userid', 'label']
+    target.index = target['userid']
+    target.drop('userid',
+                axis=1,
+                inplace=True)
+    return target
+
 # 返回训练数据,测试数据
 def bank_data_an():
     #  训练 银行 数据
@@ -71,7 +83,9 @@ bank_train,bank_test = bank_data_an()
 bill_train,bill_test = bill_data_an()
 browser_train,browser_test = browser_data_an()
 
-train = user_train.join([bank_train,bill_train,browser_train])
+overdue_data = overdue()
+
+train = user_train.join([bank_train,bill_train,browser_train,overdue_data])
 test = user_test.join([bank_test,bill_test,browser_test])
 
 print 'train size:',train.shape
@@ -79,7 +93,35 @@ bank_train_null = train[train['bank'].isnull()]
 bill_train_null = train[train['bill'].isnull()]
 browser_train_null = train[train['browser'].isnull()]
 
-print "bank train null:",bank_train_null.shape
+overdue_bank_null = train[train['label']==1]
+print "\noverdue size:",overdue_bank_null.shape
+
+
+overdue_bank_null = train[(train['label']==1) & train['bank'].isnull()]
+overdue_bill_null = train[(train['label']==1) & train['bill'].isnull()]
+overdue_browser_null = train[(train['label']==1) & train['browser'].isnull()]
+
+print "\noverdue bank null:",overdue_bank_null.shape
+print "overdue bill null:",overdue_bill_null.shape
+print "overdue browser null:",overdue_browser_null.shape
+
+overdue_bank_null = train[(train['label']==1) & train['bank'].notnull()]
+overdue_bill_null = train[(train['label']==1) & train['bill'].notnull()]
+overdue_browser_null = train[(train['label']==1) & train['browser'].notnull()]
+
+print "\noverdue bank not null:",overdue_bank_null.shape
+print "overdue bill not null:",overdue_bill_null.shape
+print "overdue browser not null:",overdue_browser_null.shape
+
+overdue_bank_null = train[(train['label']==0) & train['bank'].isnull()]
+overdue_bill_null = train[(train['label']==0) & train['bill'].isnull()]
+overdue_browser_null = train[(train['label']==0) & train['browser'].isnull()]
+
+print "\nnot overdue bank null:",overdue_bank_null.shape
+print "not overdue bill null:",overdue_bill_null.shape
+print "not overdue browser null:",overdue_browser_null.shape
+
+print "\nbank train null:",bank_train_null.shape
 print "bill train null:",bill_train_null.shape
 print "browser train null:",browser_train_null.shape
 
@@ -115,15 +157,30 @@ print "browser bank test null:",browser_bank_test_null.shape
 print "all test null:",all_test_null.shape
 
 '''
-train size: (55596, 8)
-bank train null: (46302, 8)
-bill train null: (2422, 8)
-browser train null: (8266, 8)
+train size: (55596, 9)
 
-bank bill train null: (416, 8)
-bill browser train null: (324, 8)
-browser bank train null: (7194, 8)
-all train null: (37, 8)
+overdue size: (7183, 9)
+
+overdue bank null: (5723, 9)
+overdue bill null: (578, 9)
+overdue browser null: (987, 9)
+
+overdue bank not null: (1460, 9)
+overdue bill not null: (6605, 9)
+overdue browser not null: (6196, 9)
+
+not overdue bank null: (40579, 9)
+not overdue bill null: (1844, 9)
+not overdue browser null: (7279, 9)
+
+bank train null: (46302, 9)
+bill train null: (2422, 9)
+browser train null: (8266, 9)
+
+bank bill train null: (416, 9)
+bill browser train null: (324, 9)
+browser bank train null: (7194, 9)
+all train null: (37, 9)
 
 test size: (13899, 8)
 bank test null: (13190, 8)

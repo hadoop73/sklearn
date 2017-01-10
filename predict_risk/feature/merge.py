@@ -11,17 +11,35 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
 
 
-user_info = pd.read_csv("../data/train/user_info_dummy.csv")
-bank_data = pd.read_csv("../data/train/bank_dummy_data.csv")
-bill_data = pd.read_csv("../data/train/bill_dummy_data.csv")
+def merge():
+    user_info = pd.read_csv("../data/train/user_info_train.csv")
+    bank_data = pd.read_csv("../data/train/bank_data.csv")
+    bill_data = pd.read_csv("../data/train/bill_detail.csv")
+    browse_data = pd.read_csv("../data/train/browse_history.csv")
 
 
-datas = user_info.join([bank_data,bill_data])
+    user_info.index = user_info['userid']
+    user_info.drop(['userid'],axis=1,inplace=True)
 
-datas.fillna(0)
-print datas.head()
+    bank_data.index = bank_data['userid']
+    bank_data.drop(['userid'],axis=1,inplace=True)
+
+    bill_data.index = bill_data['userid']
+    bill_data.drop(['userid'],axis=1,inplace=True)
 
 
+    browse_data.index = browse_data['userid']
+    browse_data.drop(['userid'],axis=1,inplace=True)
+
+    datas = user_info.join([bank_data,bill_data,browse_data],how='outer')
+
+    datas = datas.fillna(0)
+    datas.to_csv('../data/train_data_7.csv')
+    print datas.head()
+
+
+if __name__=='__main__':
+    merge()
 
 
 
