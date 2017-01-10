@@ -1,12 +1,19 @@
 # coding:utf-8
 
 
-from GetData import getDatas
-from WriteDatas import writeDatas
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.font_manager import FontProperties
+plt.rcParams['font.sans-serif']=['SimHei']
+plt.rcParams['axes.unicode_minus'] = False
+font = FontProperties(fname='/usr/share/fonts/truetype/arphic/ukai.ttc',size=14)
 
 #  都是 pandas 的 DataFrame
 
-train,target,test =  getDatas("train_data_7")
+from GetUserData import getUserData
+
+train,target,test =  getUserData()
 
 import xgboost as xgb
 import numpy as np
@@ -18,13 +25,12 @@ dtest = xgb.DMatrix(test.values)
 
 #  参数设置
 
-
 param={'booster':'gbtree',
 	    'objective': 'binary:logistic',
 	    'eval_metric':'auc',
 	    'gamma':0.1,
 	    'min_child_weight':1.1,
-	    'max_depth':5,
+	    'max_depth':3,
 	    'lambda':10,
 	    'subsample':0.7,
 	    'colsample_bytree':0.7,
@@ -34,15 +40,14 @@ param={'booster':'gbtree',
 	    'seed':0,
 	    'nthread':12
 	    }
-
-num_round = 1000
+num_round = 50
 watchlist = [(dtrain,'train')]
 bst = xgb.train(param, dtrain, num_round,evals=watchlist)
 # make prediction
 preds = bst.predict(dtest)
 
 #  写入文件
-writeDatas(preds,test,"7")
+#writeDatas(preds,test,"7")
 
 from sklearn import metrics
 from sklearn.cross_validation import train_test_split
