@@ -14,6 +14,8 @@ browse_history_test = pd.read_csv("../../pcredit/test/browse_history_test.txt",h
 browse_history = pd.concat([browse_history_train,browse_history_test])
 browse_history.columns = names
 
+browse_history['browse_count'] = 1
+
 browse_time = browse_history[['userid','time','browse_count']]
 browse_time_n = pd.pivot_table(browse_time,index=['userid','time'],values=['browse_count'],aggfunc=sum)
 
@@ -70,7 +72,6 @@ browser_data = browser_behavior_mean.join([browse_time_max,  # 统计相同时�
                                                    browse_time_median,
                                                    browse_time_var,
                                                    browse_time_std,
-                                                   browse_time_var,
                                                    browse_time_n_1_sum,  # 不同时间的记录条数统计
                                                    browser_behavior_max,
                                                    browser_behavior_min,
@@ -78,13 +79,15 @@ browser_data = browser_behavior_mean.join([browse_time_max,  # 统计相同时�
                                                    ])
 
 
-browser_data.to_csv('../data/train/browse_history.csv')
-
 print "browser_data"
 print '\t','../data/train/browse_history.csv'
 
 
 print browser_data.shape
+
+browser_data.to_csv('../data/train/browse_history.csv')
+
+
 
 
 
