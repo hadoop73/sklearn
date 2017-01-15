@@ -11,12 +11,21 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
 
 
-def merge():
-    user_info = pd.read_csv("../data/train/user_info_train.csv")
-    bank_data = pd.read_csv("../data/train/bank_data.csv")
-    bill_data = pd.read_csv("../data/train/bill_detail.csv")
-    browse_data = pd.read_csv("../data/train/browse_history.csv")
+def merge(user='',bill=''):
+    file_user = "../data/train/user_info_train{}.csv".format(user)
+    file_bank = "../data/train/bank_detail.csv"
+    file_bill = "../data/train/bill_detail{}.csv".format(bill)
+    file_browser = "../data/train/browse_history.csv"
+    user_info = pd.read_csv(file_user)
+    bank_data = pd.read_csv(file_bank)
+    bill_data = pd.read_csv(file_bill)
+    browse_data = pd.read_csv(file_browser)
 
+    print "merge datas:"
+    print "\t",file_user
+    print "\t",file_bank
+    print "\t",file_bill
+    print "\t",file_browser
 
     user_info.index = user_info['userid']
     user_info.drop(['userid'],axis=1,inplace=True)
@@ -34,12 +43,20 @@ def merge():
     datas = user_info.join([bank_data,bill_data,browse_data],how='outer')
 
     datas = datas.fillna(0)
-    datas.to_csv('../data/train_data_7.csv')
+    file_result = '../data/train_data_{}.csv'.format(bill)
+    print "datas produced!"
+    print "\t",file_result
+    print "datas size: ", datas.shape
+    datas.to_csv(file_result)
     print datas.head()
 
 
+from predict_risk.model.GBDT import gbdt
+
 if __name__=='__main__':
-    merge()
+
+    merge(bill="")
+    print "merge finished!!!!"
 
 
 
