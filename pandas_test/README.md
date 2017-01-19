@@ -79,7 +79,39 @@ obj.drop(['d','c'],axis=1)
 [读写操作以及数据处理](read_write.ipynb)
 
 
+## 插入行，插入列
 
+**插入列**
+
+直接添加
+
+```
+d['c'] = d['a']-d['b'] # 根据 列a 和 列b 构建 列c
+``
+
+**插入行**
+
+比较好的方法，所有的行都是放入数组的字典，直接用数组构建 DataFrame
+
+```
+r = []
+r.append(d)  # r 中添加每一行，每行都是一个字典
+df = pd.DataFrame(r) # 根据列表构建 DataFrame
+```
+
+
+方法二：在 DataFrame 中添加 DataFrame或列表 的形式，添加行
+```
+f = pd.DataFrame(columns=['a','b','c'])
+f.append(df,ignore_index=True)  # 添加一个 DataFrame 的 df
+```
+
+添加列表
+
+```
+f = pd.DataFrame(columns=['a','b','c'])
+f.loc[i] = [1,2,3]  # 以列表的形式添加一个行
+```
 
  [1]: http://python.jobbole.com/85742/?utm_source=blog.jobbole.com&utm_medium=relatedPosts
 
