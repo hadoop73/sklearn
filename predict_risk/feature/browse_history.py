@@ -110,26 +110,47 @@ def test_(u):
     # 获得所有的用户
     d = {'userid': u}
 
+    browse_history['browse_count'] = 1
     data = browse_history[browse_history.userid == u]
+
+    # 不分阶段,统计总的一个情况,组要还是一个时间上的统计
+    brdata = data[['userid', 'time', 'browse_count']].groupby(['userid', 'time']).agg(sum)
+    brdata.reset_index(inplace=True)
+    d['browse_count' + '_min'] = brdata['browse_count'].min()
+    d['browse_count' + '_max'] = brdata['browse_count'].max()
+    d['browse_count' + '_mean'] = brdata['browse_count'].mean()
+    d['browse_count' + '_median'] = brdata['browse_count'].median()
+    d['browse_count' + '_std'] = brdata['browse_count'].std()
+    d['browse_count' + '_count'] = brdata['browse_count'].count()
+    d['log_cnt'] = np.log(1 + brdata['browse_count'].sum())
 
     for i in range(5):
                 stg = stage[i]
                 di = data[(split_point[i]<(data.time))&((data.time)<split_point[i+1])]
                 #  计算每一个用户的 最小，最大，中值，平均值，方差，数量，以及最大值和最小值的差
-                d[stg+'_cnt'] = di['time'].count()
-                d[stg + 'log_cnt'] = np.log(1+di['time'].count())
+                brdata = di[['userid', 'time', 'browse_count']].groupby(['userid', 'time']).agg(sum)
+                brdata.reset_index(inplace=True)
+                d[stg+'browse_count'+'_min'] = brdata['browse_count'].min()
+                d[stg + 'browse_count' + '_max'] = brdata['browse_count'].max()
+                d[stg + 'browse_count' + '_mean'] = brdata['browse_count'].mean()
+                d[stg + 'browse_count' + '_median'] = brdata['browse_count'].median()
+                d[stg + 'browse_count' + '_std'] = brdata['browse_count'].std()
+                d[stg + 'browse_count' + '_count'] = brdata['browse_count'].count()
+                d[stg + 'log_cnt'] = np.log(1+brdata['browse_count'].sum())
+
     #ftures = pd.DataFrame(d,index=[0])
     print "add userid: ", u
     return d
 
 rst = []
 from multiprocessing import Pool,Queue,Lock
-pool = Pool(4)
+pool = Pool(2)
 
 users = list(browse_history.userid.unique())
 i=0
 for u in users:
-
+    if i>2:break
+    i+=1
     rst.append(pool.apply_async(test_, args=(u,)))
 
 
@@ -137,7 +158,7 @@ rst = [i.get() for i in rst]
 
 features = pd.DataFrame(rst)
 
-features.to_csv('../data/train/browse_history_stage.csv',index=None)
+features.to_csv('../data/train/browse_history_stage5.csv',index=None)
 print features.head()
 
 #if __name__=='__main__':
