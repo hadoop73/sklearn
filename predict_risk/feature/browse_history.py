@@ -142,23 +142,72 @@ def test_(u):
     print "add userid: ", u
     return d
 
+
+
+names_loan_time = ['userid','loan_time']
+loan_time_train = pd.read_csv("../../pcredit/train/loan_time_train.txt",header=None)
+loan_time_test = pd.read_csv("../../pcredit/test/loan_time_test.txt",header=None)
+
+loan_time = pd.concat([loan_time_train,loan_time_test],axis=0)
+
+loan_time.columns = names_loan_time
+
+def test_split2(u):
+
+    # 获得所有的用户
+    d = {'userid': u}
+
+    browse_history['browse_count'] = 1
+    datas = browse_history[browse_history.userid == u]
+
+    ctime = loan_time[loan_time['userid']==u]
+    data_gt = datas[ datas.time >= ctime]
+
+    # 不分阶段,统计总的一个情况,组要还是一个时间上的统计
+    brdata = data_gt[['userid', 'time', 'browse_count']].groupby(['userid', 'time']).agg(sum)
+    brdata.reset_index(inplace=True)
+    d['browse_count' + '_min'+"_gt"] = brdata['browse_count'].min()
+    d['browse_count' + '_max'+"_gt"] = brdata['browse_count'].max()
+    d['browse_count' + '_mean'+"_gt"] = brdata['browse_count'].mean()
+    d['browse_count' + '_median'+"_gt"] = brdata['browse_count'].median()
+    d['browse_count' + '_std'+"_gt"] = brdata['browse_count'].std()
+    d['browse_count' + '_count'+"_gt"] = brdata['browse_count'].count()
+    d['log_cnt'+"_gt"] = np.log(1 + brdata['browse_count'].sum())
+
+
+    data_lt = datas[ datas.time < ctime]
+    brdata = data_lt[['userid', 'time', 'browse_count']].groupby(['userid', 'time']).agg(sum)
+    brdata.reset_index(inplace=True)
+    d['browse_count' + '_min'+"_lt"] = brdata['browse_count'].min()
+    d['browse_count' + '_max'+"_lt"] = brdata['browse_count'].max()
+    d['browse_count' + '_mean'+"_lt"] = brdata['browse_count'].mean()
+    d['browse_count' + '_median'+"_lt"] = brdata['browse_count'].median()
+    d['browse_count' + '_std'+"_lt"] = brdata['browse_count'].std()
+    d['browse_count' + '_count'+"_lt"] = brdata['browse_count'].count()
+    d['log_cnt'+"_lt"] = np.log(1 + brdata['browse_count'].sum())
+
+    #ftures = pd.DataFrame(d,index=[0])
+    print "add userid: ", u
+    return d
+
 rst = []
 from multiprocessing import Pool,Queue,Lock
-pool = Pool(2)
+pool = Pool(3)
 
 users = list(browse_history.userid.unique())
 i=0
 for u in users:
-    if i>2:break
-    i+=1
-    rst.append(pool.apply_async(test_, args=(u,)))
+
+    rst.append(pool.apply_async(test_split2, args=(u,)))
 
 
 rst = [i.get() for i in rst]
 
 features = pd.DataFrame(rst)
 
-features.to_csv('../data/train/browse_history_stage5.csv',index=None)
+# 5 个时间段的统计
+# features.to_csv('../data/train/browse_history_stage5.csv',index=None)
+features.to_csv('../data/train/browse_history_split2.csv',index=None)
 print features.head()
 
 #if __name__=='__main__':
