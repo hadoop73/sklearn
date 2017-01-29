@@ -5,7 +5,7 @@ import pandas as pd
 
 def  writeDatas(data,test,name='ok'):
     result = pd.DataFrame(data)
-    result.index = test.index
+    result.index = test.index.astype(int)
     result.columns = ['probability']
     result['probability'] = result['probability'].apply(lambda x:np.abs(x))
     print "Datas writed:"

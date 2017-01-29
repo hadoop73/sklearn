@@ -6,7 +6,7 @@ from WriteDatas import writeDatas
 
 #  都是 pandas 的 DataFrame
 
-train,target,test =  getDatas("train_data_")
+train,target,test =  getDatas("train_data_0")
 
 import xgboost as xgb
 import numpy as np
@@ -21,6 +21,9 @@ train_X, test_X, train_y, test_y = train_test_split(train,
                                                     test_size=0.2,
                                                     random_state=0)
 
+
+print train.shape
+
 #  转换数据
 #train.drop(['userid'],axis=1,inplace=True)
 dtrain = xgb.DMatrix(train_X,label=train_y)
@@ -30,11 +33,29 @@ dtest = xgb.DMatrix(test)
 
 
 #  参数设置
+"""
+auc:
+[1499]	train-auc:0.843847
+K-S:0.39301881258
+AUC:0.762272048652
 
+KS:
+[0]	train-error:0.127979	train-error:0.336846
+[1]	train-error:0.127709	train-error:0.344962
+[1499]	train-error:0.114286	train-error:0.522664
+K-S:0.39301881258
+AUC:0.762272048652
+"""
+
+def score_func(preds,dt):
+	y = dt.get_label()
+	fp, tp, thresholds = metrics.roc_curve(y, preds, pos_label=1)
+	ks = np.max(tp - fp)
+	return 'error',ks
 
 param={'booster':'gbtree',
 	    'objective': 'binary:logistic',
-	    'eval_metric':'auc',
+	    'eval_metric':'auc',    #'auc',
 	    'gamma':0.1,
 	    'min_child_weight':1.1,
 	    'max_depth':5,
@@ -45,7 +66,7 @@ param={'booster':'gbtree',
 	    'eta': 0.01,
 	    'tree_method':'exact',
 	    'seed':0,
-	    'nthread':12
+	    'nthread':8
 	    }
 
 num_round = 1500
@@ -77,7 +98,7 @@ for (key, value) in feature_score:
 	fs.append("{0},{1}\n".format(key, value))
 	allFeatures.append(key)
 
-with open('./featurescore/feature_score_{0}.csv'.format('x4'), 'w') as f:
+with open('./featurescore/feature_score_{0}.csv'.format(ks), 'w') as f:
 	f.writelines("feature,score\n")
 	f.writelines(fs)
 

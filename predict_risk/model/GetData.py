@@ -22,8 +22,16 @@ def getDatas(dir='train_data_'):
     # 分开训练集、测试集
     train = loan_data.iloc[0: 55596, :]
     test = loan_data.iloc[55596:, :]
+    t = test
+
+    t['probability'] = 0.1
+    t = t['probability']
+    t.columns = ['userid','probability' ]
+    t.to_csv('../data/res.csv')
     return train,target,test
 
+if __name__=='__main__':
+    getDatas()
 
 def getXGBoostDatas(dir='train_data'):
     loan_data = pd.read_csv("../data/{}.csv".format(dir))

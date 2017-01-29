@@ -32,11 +32,16 @@ def dummyTranform(datas,cols):
 user_info_dummy = dummyTranform(user_info.copy(),user_info.columns)
 #  测试数据写入文件
 
+user_info.to_csv("../data/train/user_info_data.csv")
+
+print "\t","../data/train/user_info_data.csv"
+print user_info.shape
+
 user_info_dummy.to_csv("../data/train/user_info_dummy.csv")
 
+print "\t","../data/train/user_info_dummy.csv"
 
-
-
+print user_info_dummy.shape
 
 
 
