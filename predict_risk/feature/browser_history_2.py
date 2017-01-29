@@ -42,13 +42,15 @@ def time_m(u):
 
 pool = Pool(12)
 rst = pool.map(time_m,users)
+pool.close()
+pool.join()
 Datas = pd.DataFrame(rst)
 #print Data.head()
-
+del rst,t,data
 
 
 # 浏览数据统计
-data = browse_history[['userid','browser_behavior','browse_count']].head(100)
+data = browse_history[['userid','browser_behavior','browse_count']]
 
 t = data.groupby(['userid','browser_behavior']).agg(sum)
 t.reset_index(inplace=True)
@@ -59,9 +61,10 @@ browser_behavior_tp = list(data.browser_behavior.unique())
 def browser_behavior_u(u):
     d = {"userid":u}
     ta = t.loc[t.userid == u, :]
+    #print ta
     for b in browser_behavior_tp:
         try:
-            tb = ta.loc[t.browser_behavior==b,'browse_count']
+            tb = ta.loc[ta.browser_behavior==b,'browse_count']
             d['browser_'+str(b)] = tb.iloc[0]
         except:
             d['browser_' + str(b)] = np.NAN
@@ -71,16 +74,17 @@ def browser_behavior_u(u):
 pool = Pool(12)
 
 rst = pool.map(browser_behavior_u,users)
-
+pool.close()
+pool.join()
 Data = pd.DataFrame(rst)
 Datas = pd.merge(Datas,Data,on='userid')
-del Data,rst
+del Data,rst,t,data
 
 
 
 
 # 子行为统计
-data = browse_history[['userid','browser_behavior_number','browse_count']].head(100)
+data = browse_history[['userid','browser_behavior_number','browse_count']]
 t = data.groupby(['userid','browser_behavior_number']).agg(sum)
 t.reset_index(inplace=True)
 
@@ -100,11 +104,11 @@ def browser_behavior_number_u(u):
 
 pool = Pool(12)
 rst = pool.map(browser_behavior_number_u,users)
-
+pool.close()
+pool.join()
 Data = pd.DataFrame(rst)
 Datas = pd.merge(Datas,Data,on='userid')
-del Data,rst
-
+del Data,rst,data
 
 print Datas.head()
 print Datas.shape
