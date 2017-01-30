@@ -61,6 +61,14 @@ browser_behavior_tp = list(data.browser_behavior.unique())
 def browser_behavior_u(u):
     d = {"userid":u}
     ta = t.loc[t.userid == u, :]
+    d['browser_data_max'] = ta['browse_count'].max()
+    d['browser_data_min'] = ta['browse_count'].min()
+    d['browser_data_mean'] = ta['browse_count'].mean()
+    d['browser_data_median'] = ta['browse_count'].median()
+    d['browser_data_var'] = ta['browse_count'].var()
+    d['browser_data_std'] = ta['browse_count'].std()
+    d['browser_data_count'] = ta['browse_count'].count()
+    d['browser_data_max_min'] = d['browser_data_max'] - d['browser_data_min']
     #print ta
     for b in browser_behavior_tp:
         try:
@@ -91,9 +99,17 @@ t.reset_index(inplace=True)
 
 def browser_behavior_number_u(u):
     d = {"userid":u}
+    ta = t.loc[t.userid == u, :]
+    d['browser_behavior_max'] = ta['browse_count'].max()
+    d['browser_behavior_min'] = ta['browse_count'].min()
+    d['browser_behavior_mean'] = ta['browse_count'].mean()
+    d['browser_behavior_median'] = ta['browse_count'].median()
+    d['browser_behavior_var'] = ta['browse_count'].var()
+    d['browser_behavior_std'] = ta['browse_count'].std()
+    d['browser_behavior_count'] = ta['browse_count'].count()
+    d['browser_behavior_max_min'] = d['browser_behavior_max'] - d['browser_behavior_min']
     for b in [1,4,5,6,7,8,10]:
         try:
-            ta = t.loc[t.userid==u,:]
             tb = ta.loc[t.browser_behavior_number==b,'browse_count']
             d['browser_behavior_number_'+str(b)] = tb.iloc[0]
         except:
@@ -113,5 +129,5 @@ del Data,rst,data
 print Datas.head()
 print Datas.shape
 
-Datas.to_csv('../data/train/browser_history_new.csv',index=None)
+Datas.to_csv('../data/train/browser_history_a.csv',index=None)
 
