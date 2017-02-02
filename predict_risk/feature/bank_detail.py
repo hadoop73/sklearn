@@ -95,6 +95,16 @@ def test_(u):
             for i in range(5):
                     stg = stage[i]
                     di = data[(split_point[i]<(data.time))&((data.time)<split_point[i+1])]
+                    if di.shape[0] < 2:
+                        d[stg + col + str(e) + '_min'] = -9999
+                        d[stg + col + str(e) + '_max'] = -9999
+                        d[stg + col + str(e) + '_median'] = -9999
+                        d[stg + col + str(e) + '_mean'] = -9999
+                        d[stg + col + str(e) + '_std'] = -9999
+                        d[stg + col + str(e) + '_cnt'] = -9999
+                        d[stg + col + str(e) + '_var'] = -9999
+                        d[stg + col + str(e) + '_max_min'] = -9999
+                        continue
                     #  计算每一个用户的 最小，最大，中值，平均值，方差，数量，以及最大值和最小值的差
                     d[stg+col+str(e)+'_min'] = di[col].min()
                     d[stg+col+str(e)+'_max'] = di[col].max()
@@ -102,10 +112,13 @@ def test_(u):
                     d[stg+col+str(e)+'_mean'] = di[col].mean()
                     d[stg+col+str(e)+'_std'] = di[col].std()
                     d[stg+col+str(e)+'_cnt'] = di[col].count()
+                    d[stg + col + str(e) + '_var'] = di[col].var()
                     d[stg+col+str(e)+'_max_min'] = di[col].max() - di[col].min()
     #ftures = pd.DataFrame(d,index=[0])
-    print "add userid: ", u
+    print d
     return d
+
+
 
 names_loan_time = ['userid','loan_time']
 loan_time_train = pd.read_csv("../../pcredit/train/loan_time_train.txt",header=None)
@@ -124,11 +137,8 @@ def test_split2(u):
     d = {'userid': u}
     try:
         bank_users = bank_detail[bank_detail.userid == u]
-
         for e in [0,1]:
-
             bank_user = bank_users[bank_users.extype==e]
-
             data_gt = bank_user.loc[bank_user.time >= bank_user.loan_time,:]
             for col in ['examount']:
                 di = data_gt.loc[data_gt[col] != 0,:]
@@ -207,14 +217,14 @@ def time_split2(u):
 
 
 
-def new_data():
+def multi_bank():
     from multiprocessing import Pool, Queue, Lock
-    pool = Pool(5)
+    pool = Pool(12)
     #  按照特征咧进行处理
 
     users = list(bank_detail.userid.unique())
 
-    rst = pool.map(time_split2, users)
+    rst = pool.map(test_, users)
     pool.close()
     pool.join()
 
@@ -228,7 +238,7 @@ def new_data():
     #  bank 数据按照 放款前后进行统计
     # fileName = '../data/train/bank_detail_split2.csv'
     # 统计时间的信息
-    fileName = '../data/train/bank_time_2.csv'
+    fileName = '../data/train/bank_gt2.csv'
     print df.head()
 
     print "new banks datas: "
@@ -237,8 +247,23 @@ def new_data():
 
     df.to_csv(fileName)
 
+def merge_bank():
+    # 时间分为了 5 段，求收入支出的统计信息
+    d1 = pd.read_csv('../data/train/bank_detail_stage.csv')
+    # 统计放款前后的收入支出的统计信息
+    d2 = pd.read_csv('../data/train/bank_detail_split2.csv')
+    # 统计放款前后的时间差值
+    dt = pd.read_csv('../data/train/bank_time_2.csv')
+    d = pd.merge(d1,d2,on='userid')
+    d= pd.merge(d,dt,on='userid')
+
+    print d.head()
+    print d.shape
+    d.to_csv("../data/train/bank_all.csv",index=None)
+
+
 if __name__=='__main__':
-    new_data()
+    multi_bank()
 
 
 
