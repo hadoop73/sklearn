@@ -122,6 +122,7 @@ def test_(u):
     d['browse_count' + '_median'] = brdata['browse_count'].median()
     d['browse_count' + '_std'] = brdata['browse_count'].std()
     d['browse_count' + '_count'] = brdata['browse_count'].count()
+    d['browse_count' + '_var'] = brdata['browse_count'].var()
     d['log_cnt'] = np.log(1 + brdata['browse_count'].sum())
 
     for i in range(5):
@@ -136,29 +137,30 @@ def test_(u):
                 d[stg + 'browse_count' + '_median'] = brdata['browse_count'].median()
                 d[stg + 'browse_count' + '_std'] = brdata['browse_count'].std()
                 d[stg + 'browse_count' + '_count'] = brdata['browse_count'].count()
+                d[stg + 'browse_count' + '_var'] = brdata['browse_count'].var()
                 d[stg + 'log_cnt'] = np.log(1+brdata['browse_count'].sum())
 
     #ftures = pd.DataFrame(d,index=[0])
-    print "add userid: ", u
+    print d
     return d
 
-rst = []
 from multiprocessing import Pool,Queue,Lock
 pool = Pool(5)
 
 users = list(browse_history.userid.unique())
-i=0
-for u in users:
 
-    rst.append(pool.apply_async(test_, args=(u,)))
-
-
-rst = [i.get() for i in rst]
+rst = pool.map(test_,users)
 
 features = pd.DataFrame(rst)
-
-features.to_csv('../data/train/browse_history_stage5.csv',index=None)
+features.fillna(-9999,inplace=True)
 print features.head()
+print features.shape
+
+features.to_csv('../data/train/browse_stage5.csv',index=None)
+
+
+
+
 
 #if __name__=='__main__':
 
