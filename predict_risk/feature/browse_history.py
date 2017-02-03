@@ -97,6 +97,8 @@ browse_history_test = pd.read_csv("../../pcredit/test/browse_history_test.txt", 
 
 browse_history = pd.concat([browse_history_train, browse_history_test])
 browse_history.columns = names
+browse_history['browse_count'] = 1
+del browse_history_train, browse_history_test
 
 stage = ['stg1_','stg2_','stg3_','stg4_','stg5_']
 
@@ -109,7 +111,7 @@ def test_(u):
 
     # 获得所有的用户
     d = {'userid': u}
-    browse_history['browse_count'] = 1
+
     data = browse_history[browse_history.userid == u]
     # 不分阶段,统计总的一个情况,组要还是一个时间上的统计
     brdata = data[['userid', 'time', 'browse_count']].groupby(['userid', 'time']).agg(sum)
