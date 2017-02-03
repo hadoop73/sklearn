@@ -79,12 +79,11 @@ def test_all():
 
 
 stage = ['stg1_','stg2_','stg3_','stg4_','stg5_']
-
+t = bank_detail['time'].describe(percentiles=[0.2, 0.4, 0.6, 0.8])
+split_point = [0, int(t['20%']), int(t['40%']), int(t['60%']), int(t['80%']), 1e11]
 # 时间分为了 5 段，求收入支出的统计信息
 def test_(u):
     #  时间分 5 段
-    t = bank_detail['time'].describe(percentiles=[0.2,0.4,0.6,0.8])
-    split_point = [0,int(t['20%']),int(t['40%']),int(t['60%']),int(t['80%']),1e11]
     # 获得所有的用户
     d = {'userid': u}
     for e in [0,1]:
@@ -106,6 +105,15 @@ def test_(u):
                         d[stg + col + str(e) + '_max_min'] = -9999
                         continue
                     #  计算每一个用户的 最小，最大，中值，平均值，方差，数量，以及最大值和最小值的差
+                    if di.shape[0] < 2:
+                        d[stg + col + str(e) + '_min'] = -9999
+                        d[stg + col + str(e) + '_max'] = -9999
+                        d[stg + col + str(e) + '_median'] = -9999
+                        d[stg + col + str(e) + '_mean'] = -9999
+                        d[stg + col + str(e) + '_std'] = -9999
+                        d[stg + col + str(e) + '_cnt'] = -9999
+                        d[stg + col + str(e) + '_max_min'] = -9999
+                        continue
                     d[stg+col+str(e)+'_min'] = di[col].min()
                     d[stg+col+str(e)+'_max'] = di[col].max()
                     d[stg+col+str(e)+'_median'] = di[col].median()
@@ -118,14 +126,38 @@ def test_(u):
     print d
     return d
 
+# 没有筛选数据小于 2
+def test_0(u):
+    #  时间分 5 段
+    # 获得所有的用户
+    d = {'userid': u}
+    for e in [0,1]:
+        bank_user = bank_detail[bank_detail.userid == u]
+        bank_user = bank_user[bank_user.extype==e]
+        for col in ['examount']:
+            data = bank_user[bank_user[col] != 0]
+            for i in range(5):
+                    stg = stage[i]
+                    di = data[(split_point[i]<(data.time))&((data.time)<split_point[i+1])]
+                    d[stg+col+str(e)+'_min'] = di[col].min()
+                    d[stg+col+str(e)+'_max'] = di[col].max()
+                    d[stg+col+str(e)+'_median'] = di[col].median()
+                    d[stg+col+str(e)+'_mean'] = di[col].mean()
+                    d[stg+col+str(e)+'_std'] = di[col].std()
+                    d[stg+col+str(e)+'_cnt'] = di[col].count()
+                    d[stg + col + str(e) + '_var'] = di[col].var()
+                    d[stg+col+str(e)+'_max_min'] = di[col].max() - di[col].min()
+                    del di
+    #ftures = pd.DataFrame(d,index=[0])
+    print d
+    return d
+
 
 
 names_loan_time = ['userid','loan_time']
 loan_time_train = pd.read_csv("../../pcredit/train/loan_time_train.txt",header=None)
 loan_time_test = pd.read_csv("../../pcredit/test/loan_time_test.txt",header=None)
-
 loan_time = pd.concat([loan_time_train,loan_time_test],axis=0)
-
 loan_time.columns = names_loan_time
 
 bank_detail = pd.merge(bank_detail,loan_time,on='userid')
@@ -137,8 +169,30 @@ def test_split2(u):
     d = {'userid': u}
     try:
         bank_users = bank_detail[bank_detail.userid == u]
+
         for e in [0,1]:
             bank_user = bank_users[bank_users.extype==e]
+            bank_user = bank_user[bank_user.examount!=0]
+            col = 'examount'
+            if bank_users.shape[0] >= 2:
+                #  计算每一个用户的 最小，最大，中值，平均值，方差，数量，以及最大值和最小值的差
+                d[col + str(e) + '_min' + "_all"] = bank_user[col].min()
+                d[col + str(e) + '_max' + "_all"] = bank_user[col].max()
+                d[col + str(e) + '_median' + "_all"] = bank_user[col].median()
+                d[col + str(e) + '_mean' + "_all"] = bank_user[col].mean()
+                d[col + str(e) + '_std' + "_all"] = bank_user[col].std()
+                d[col + str(e) + '_cnt' + "_all"] = bank_user[col].count()
+                d[col + str(e) + '_max_min' + "_all"] = bank_user[col].max() - bank_user[col].min()
+            else:
+                d[col + str(e) + '_min' + "_all"] = -9999
+                d[col + str(e) + '_max' + "_all"] = -9999
+                d[col + str(e) + '_median' + "_all"] = -9999
+                d[col + str(e) + '_mean' + "_all"] = -9999
+                d[col + str(e) + '_std' + "_all"] = -9999
+                d[col + str(e) + '_cnt' + "_all"] = -9999
+                d[col + str(e) + '_max_min' + "_all"] = -9999
+
+
             data_gt = bank_user.loc[bank_user.time >= bank_user.loan_time,:]
             for col in ['examount']:
                 di = data_gt.loc[data_gt[col] != 0,:]
@@ -152,13 +206,13 @@ def test_split2(u):
                     d[col+str(e)+'_cnt'+"_gt"] = di[col].count()
                     d[col+str(e)+'_max_min'+"_gt"] = di[col].max() - di[col].min()
                 else:
-                    d[col + str(e) + '_min' + "_gt"] = np.NaN
-                    d[col + str(e) + '_max' + "_gt"] = np.NaN
-                    d[col + str(e) + '_median' + "_gt"] = np.NaN
-                    d[col + str(e) + '_mean' + "_gt"] = np.NaN
-                    d[col + str(e) + '_std' + "_gt"] = np.NaN
-                    d[col + str(e) + '_cnt' + "_gt"] = np.NaN
-                    d[col + str(e) + '_max_min' + "_gt"] = np.NaN
+                    d[col + str(e) + '_min' + "_gt"] = -9999
+                    d[col + str(e) + '_max' + "_gt"] = -9999
+                    d[col + str(e) + '_median' + "_gt"] = -9999
+                    d[col + str(e) + '_mean' + "_gt"] = -9999
+                    d[col + str(e) + '_std' + "_gt"] = -9999
+                    d[col + str(e) + '_cnt' + "_gt"] = -9999
+                    d[col + str(e) + '_max_min' + "_gt"] = -9999
 
             data_lt = bank_user.loc[bank_user.time < bank_user.loan_time,:]
             for col in ['examount']:
@@ -173,16 +227,74 @@ def test_split2(u):
                     d[col + str(e) + '_cnt' + "_lt"] = di[col].count()
                     d[col + str(e) + '_max_min' + "_lt"] = di[col].max() - di[col].min()
                 else:
-                    d[col + str(e) + '_min' + "_lt"] = np.NaN
-                    d[col + str(e) + '_max' + "_lt"] = np.NaN
-                    d[col + str(e) + '_median' + "_lt"] = np.NaN
-                    d[col + str(e) + '_mean' + "_lt"] = np.NaN
-                    d[col + str(e) + '_std' + "_lt"] = np.NaN
-                    d[col + str(e) + '_cnt' + "_lt"] = np.NaN
-                    d[col + str(e) + '_max_min' + "_lt"] = np.NaN
+                    d[col + str(e) + '_min' + "_lt"] = -9999
+                    d[col + str(e) + '_max' + "_lt"] = -9999
+                    d[col + str(e) + '_median' + "_lt"] = -9999
+                    d[col + str(e) + '_mean' + "_lt"] = -9999
+                    d[col + str(e) + '_std' + "_lt"] = -9999
+                    d[col + str(e) + '_cnt' + "_lt"] = -9999
+                    d[col + str(e) + '_max_min' + "_lt"] = -9999
 
         #ftures = pd.DataFrame(d,index=[0])
-        print "add userid: ", u
+        print d
+        print d
+    except Exception:
+        print Exception
+        print "userid: ",u
+    return d
+
+# 分了放款前后，同时加了时间
+def test_split20(u):
+
+    # 获得所有的用户
+    d = {'userid': u}
+    try:
+        bank_users = bank_detail[bank_detail.userid == u]
+
+        for e in [0,1]:
+            bank_user = bank_users[bank_users.extype==e]
+            bank_user = bank_user[bank_user.examount!=0]
+            col = 'examount'
+            #  计算每一个用户的 最小，最大，中值，平均值，方差，数量，以及最大值和最小值的差
+            d[col + str(e) + '_min' + "_all"] = bank_user[col].min()
+            d[col + str(e) + '_max' + "_all"] = bank_user[col].max()
+            d[col + str(e) + '_median' + "_all"] = bank_user[col].median()
+            d[col + str(e) + '_mean' + "_all"] = bank_user[col].mean()
+            d[col + str(e) + '_std' + "_all"] = bank_user[col].std()
+            d[col + str(e) + '_cnt' + "_all"] = bank_user[col].count()
+            d[col + str(e) + '_var' + "_all"] = bank_user[col].var()
+            d[col + str(e) + '_max_min' + "_all"] = bank_user[col].max() - bank_user[col].min()
+
+            d[col + str(e)+'time_min'] = np.min(bank_users.time - bank_users.loan_time)
+            d[col + str(e) + 'time_max'] = np.max(bank_users.time - bank_users.loan_time)
+            data_gt = bank_user.loc[bank_user.time >= bank_user.loan_time,:]
+            for col in ['examount']:
+                di = data_gt.loc[data_gt[col] != 0,:]
+                #  计算每一个用户的 最小，最大，中值，平均值，方差，数量，以及最大值和最小值的差
+                d[col + str(e) + '_min' + "_gt"] = di[col].min()
+                d[col + str(e) + '_max' + "_gt"] = di[col].max()
+                d[col + str(e) + '_median' + "_gt"] = di[col].median()
+                d[col + str(e) + '_mean' + "_gt"] = di[col].mean()
+                d[col + str(e) + '_std' + "_gt"] = di[col].std()
+                d[col + str(e) + '_cnt' + "_gt"] = di[col].count()
+                d[col + str(e) + '_var' + "_gt"] = di[col].var()
+                d[col + str(e) + '_max_min' + "_gt"] = di[col].max() - di[col].min()
+
+            data_lt = bank_user.loc[bank_user.time < bank_user.loan_time,:]
+            for col in ['examount']:
+                di = data_lt.loc[data_lt[col] != 0, :]
+                #  计算每一个用户的 最小，最大，中值，平均值，方差，数量，以及最大值和最小值的差
+                d[col + str(e) + '_min' + "_lt"] = di[col].min()
+                d[col + str(e) + '_max' + "_lt"] = di[col].max()
+                d[col + str(e) + '_median' + "_lt"] = di[col].median()
+                d[col + str(e) + '_mean' + "_lt"] = di[col].mean()
+                d[col + str(e) + '_std' + "_lt"] = di[col].std()
+                d[col + str(e) + '_cnt' + "_lt"] = di[col].count()
+                d[col + str(e) + '_var' + "_lt"] = di[col].var()
+                d[col + str(e) + '_max_min' + "_lt"] = di[col].max() - di[col].min()
+
+        #ftures = pd.DataFrame(d,index=[0])
+        print d
         print d
     except Exception:
         print Exception
@@ -198,72 +310,53 @@ def test_split2x(u):
 
 
 
-# 统计放款前后的时间差值
-def time_split2(u):
-    d = {'userid':u}
-    bank_users = bank_detail[bank_detail.userid == u]
-    for e in [0,1]:
-        try:
-            edata = bank_users[bank_users.extype==e]
-            tdata = edata[edata.time!=0]
-            dtime = tdata['time']-tdata['loan_time']
-            d['bank_time_min_'+str(e)] = dtime.min()
-            d['bank_time_max_'+str(e)] = dtime.max()
-        except:
-            d['bank_time_min_'+str(e)] = -9999
-            d['bank_time_max_'+str(e)] = -9999
-    print d
-    return d
-
-
-
 def multi_bank():
     from multiprocessing import Pool, Queue, Lock
-    pool = Pool(12)
+    pool = Pool(8)
     #  按照特征咧进行处理
 
     users = list(bank_detail.userid.unique())
-
-    rst = pool.map(test_, users)
+    u = users[:5]
+    rst = pool.map(test_split20, users)
     pool.close()
     pool.join()
 
     df = pd.DataFrame(rst)
     # df = df.set_index('userid')
 
-    print df.head()
 
-    # bank_detail
-    # fileName = '../data/train/bank_detail_stage.csv'
-    #  bank 数据按照 放款前后进行统计
-    # fileName = '../data/train/bank_detail_split2.csv'
     # 统计时间的信息
-    fileName = '../data/train/bank_gt2.csv'
+
+    #fileName = '../data/train/bank_time_2.csv'
+    # 统计 大于2 份为5 段的时间
+    #fileName = '../data/train/bank_detail_5_gt2.csv'   # 可以用
+    #fileName = '../data/train/bank_detail_2.csv'  # 分为放款前后
+    #fileName = '../data/train/bank_5.csv'  # 5 分段时间 test_0
+    fileName = '../data/train/bank_2.csv'  # 分为放款前后 test_split20
     print df.head()
 
     print "new banks datas: "
     print '\t', fileName
     print "datas size : ", df.shape
 
-    df.to_csv(fileName)
+    df.to_csv(fileName,index=None)
+
 
 def merge_bank():
     # 时间分为了 5 段，求收入支出的统计信息
-    d1 = pd.read_csv('../data/train/bank_detail_stage.csv')
-    # 统计放款前后的收入支出的统计信息
-    d2 = pd.read_csv('../data/train/bank_detail_split2.csv')
+    d1 = pd.read_csv('../data/train/bank_5.csv')
     # 统计放款前后的时间差值
-    dt = pd.read_csv('../data/train/bank_time_2.csv')
-    d = pd.merge(d1,d2,on='userid')
-    d= pd.merge(d,dt,on='userid')
-
+    dt = pd.read_csv('../data/train/bank_2.csv')
+    d = pd.merge(d1,dt,on='userid')
+    d.fillna(-9999,inplace=True)
     print d.head()
     print d.shape
     d.to_csv("../data/train/bank_all.csv",index=None)
 
 
 if __name__=='__main__':
-    multi_bank()
+    merge_bank()
+
 
 
 
