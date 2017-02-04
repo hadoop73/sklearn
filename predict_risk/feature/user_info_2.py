@@ -14,14 +14,14 @@ user_info_train = pd.read_csv("../../pcredit/train/user_info_train.txt",header=N
 user_info_test = pd.read_csv("../../pcredit/test/user_info_test.txt",header=None)
 user_info_train.columns = names
 user_info_test.columns = names
-user_info = pd.concat([user_info_train,user_info_test])
+user_info = pd.concat([user_info_train,user_info_test],ignore_index=True)
 
 user_info['un0'] = (user_info==0).sum(axis=1)
 
 user_info.loc[user_info.sex==0,'sex']=-9999
 user_info.loc[user_info.account==0,'account']=-9999
 user_info.loc[(user_info.job==0),'job']=-9999
-user_info.loc[(user_info.job==1) ,'job']=-9999
+user_info.loc[(user_info.job==1),'job']=-9999
 
 user_info.loc[(user_info.edu==0) ,'edu']=-9999
 user_info.loc[(user_info.edu==1) ,'edu']=-9999
@@ -39,7 +39,9 @@ for c in ['account','job','edu','marriage']:
     for k in us:
         user_info[c+str(k)]=0
         user_info.loc[user_info[c]==k,c+str(k)]=1
-
+user_info.set_index('userid',inplace=True)
+user_info.sort_index(inplace=True)
+#d = user_info[user_info['un0']!=0]
 print user_info.head()
 print user_info.shape
-user_info.to_csv('../data/train/user_data_dummy.csv',index=None)
+user_info.to_csv('../data/train/user_data_dummy.csv')

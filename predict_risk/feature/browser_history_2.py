@@ -40,22 +40,19 @@ def time_m(u):
     print d
     return d
 
-pool = Pool(12)
-rst = pool.map(time_m,users)
-pool.close()
-pool.join()
-Datas = pd.DataFrame(rst)
-#print Data.head()
-del rst,t,data
 
+def multi_time():
+    pool = Pool(12)
+    rst = pool.map(time_m,users)
+    pool.close()
+    pool.join()
+    Datas = pd.DataFrame(rst)
+    #print Data.head()
+    #Datas.fillna(-9999,inplace=True)
+    print Datas.head()
+    print Datas.shape
 
-# 浏览数据统计
-data = browse_history[['userid','browser_behavior','browse_count']]
-
-t = data.groupby(['userid','browser_behavior']).agg(sum)
-t.reset_index(inplace=True)
-
-browser_behavior_tp = list(data.browser_behavior.unique())
+    Datas.to_csv('../data/train/browser_history_time.csv', index=None)
 
 # 统计 browser 类别数据
 def browser_behavior_u(u):
@@ -79,22 +76,23 @@ def browser_behavior_u(u):
     print d
     return d
 
-pool = Pool(12)
+def multi_data():
+    # 浏览数据统计
+    data = browse_history[['userid', 'browser_behavior', 'browse_count']]
 
-rst = pool.map(browser_behavior_u,users)
-pool.close()
-pool.join()
-Data = pd.DataFrame(rst)
-Datas = pd.merge(Datas,Data,on='userid')
-del Data,rst,t,data
+    t = data.groupby(['userid', 'browser_behavior']).agg(sum)
+    t.reset_index(inplace=True)
 
+    browser_behavior_tp = list(data.browser_behavior.unique())
 
+    pool = Pool(12)
 
-
-# 子行为统计
-data = browse_history[['userid','browser_behavior_number','browse_count']]
-t = data.groupby(['userid','browser_behavior_number']).agg(sum)
-t.reset_index(inplace=True)
+    rst = pool.map(browser_behavior_u,users)
+    pool.close()
+    pool.join()
+    Data = pd.DataFrame(rst)
+    #Datas = pd.merge(Datas,Data,on='userid')
+    del Data,rst,t,data
 
 
 def browser_behavior_number_u(u):
@@ -117,17 +115,31 @@ def browser_behavior_number_u(u):
     print d
     return d
 
+def mult_browse_behavi():
+    # 子行为统计
+    data = browse_history[['userid', 'browser_behavior_number', 'browse_count']]
+    t = data.groupby(['userid', 'browser_behavior_number']).agg(sum)
+    t.reset_index(inplace=True)
 
-pool = Pool(12)
-rst = pool.map(browser_behavior_number_u,users)
-pool.close()
-pool.join()
-Data = pd.DataFrame(rst)
-Datas = pd.merge(Datas,Data,on='userid')
-del Data,rst,data
+    pool = Pool(12)
+    rst = pool.map(browser_behavior_number_u,users)
+    pool.close()
+    pool.join()
+    Data = pd.DataFrame(rst)
+    #Datas = pd.merge(Datas,Data,on='userid')
+    del Data,rst,data
 
-print Datas.head()
-print Datas.shape
+def merge_browser():
+    d = pd.read_csv('../data/train/browser_history_time.csv')
+    d1 = pd.read_csv('../data/train/browse_history_stage5.csv')
+    d = pd.merge(d,d1,on='userid')
+    d.fillna(-9999, inplace=True)
+    print d.head(10)
+    print d.shape
+    d.to_csv('../data/train/browser_history_all.csv', index=None)
 
-Datas.to_csv('../data/train/browser_history_a.csv',index=None)
+if __name__=='__main__':
+    merge_browser()
+
+
 

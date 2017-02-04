@@ -67,11 +67,12 @@ bill_test = pd.read_csv("../../pcredit/test/bill_detail_test.txt", header=None)
 
 bill_data = pd.concat([bill_train, bill_test])
 bill_data.columns = names
+bill_data.loc[bill_data['consume_amount']>60,'consume_amount'] = 60
+bill_data.loc[bill_data['prepare_amount']>25,'prepare_amount'] = 23
 
-
-cols = ['pre_amount_of_bill','pre_repayment','credit_amount',
+cols = ['time','pre_amount_of_bill','pre_repayment','credit_amount',
         'amount_of_bill_left','least_repayment','consume_amount',
-        'amount_of_bill','circ_interest','avail_amount',
+        'amount_of_bill','adjust_amount','circ_interest','avail_amount',
         'prepare_amount']
 sts = ['_rate','_min','_max','_median','_mean','_std','_cnt','_max_min']
 
@@ -92,7 +93,8 @@ loan_time.columns = names_loan_time
 
 
 def test_lt(user,sf='_lt'):
-    d = {'userid':user}
+    #d = {'userid':user}
+    d = {}
 
     bills = bill_data[bill_data.userid==user]
     ctime = loan_time[loan_time['userid']==user]
@@ -104,19 +106,23 @@ def test_lt(user,sf='_lt'):
 
         t = bills[bills[col]!=0][col]
         d[col+'_rate'+sf] = 1- t.shape[0] /(1+ bills_len)  # 求出 缺失值的 比率
+        if col in ['time']:
+            t = t % 2017
         d[col+'_min'+sf] = t.min()
         d[col + '_max'+sf] = t.max()
         d[col + '_median'+sf] = t.median()
         d[col + '_mean'+sf] = t.mean()
         d[col + '_std'+sf] = t.std()
         d[col + '_cnt'+sf] = t.count()
+        d[col + '_var' + sf] = t.var()
         d[col + '_max_min'+sf] = t.max() - t.min()
-    r = pd.DataFrame(d,index=[0])
-    r = r.set_index('userid')
-    return r
+    #r = pd.DataFrame(d,index=[0])
+    #r = r.set_index('userid')
+    return d
 
 def test_gt(user,sf="_gt"):
-    d = {'userid':user}
+    #d = {'userid':user}
+    d = {}
     bills = bill_data[bill_data.userid==user]
 
     ctime = loan_time[loan_time['userid']==user]
@@ -128,16 +134,19 @@ def test_gt(user,sf="_gt"):
 
         t = bills[bills[col]!=0][col]
         d[col+'_rate'+sf] = 1- t.shape[0] /(1+ bills_len)  # 求出 缺失值的 比率
+        if col in ['time']:
+            t = t % 2017
         d[col+'_min'+sf] = t.min()
         d[col + '_max'+sf] = t.max()
         d[col + '_median'+sf] = t.median()
         d[col + '_mean'+sf] = t.mean()
         d[col + '_std'+sf] = t.std()
         d[col + '_cnt'+sf] = t.count()
+        d[col + '_var' + sf] = t.var()
         d[col + '_max_min'+sf] = t.max() - t.min()
-    r = pd.DataFrame(d,index=[0])
-    r = r.set_index('userid')
-    return r
+    #r = pd.DataFrame(d,index=[0])
+    #r = r.set_index('userid')
+    return d
 
 
 def test_(user):
@@ -151,51 +160,124 @@ def test_(user):
 
         t = bills[bills[col]!=0][col]
         d[col+'_rate'] = 1- t.shape[0] /(1+ bills_len)  # 求出 缺失值的 比率
+        if col in ['time']:
+            t = t % 2017
         d[col+'_min'] = t.min()
         d[col + '_max'] = t.max()
         d[col + '_median'] = t.median()
         d[col + '_mean'] = t.mean()
         d[col + '_std'] = t.std()
         d[col + '_cnt'] = t.count()
+        d[col + '_var'] = t.var()
         d[col + '_max_min'] = t.max() - t.min()
     lt = test_lt(user)
     gt = test_gt(user)
 
-    r = pd.DataFrame(d,index=[0])
-    r = r.set_index('userid')
-    r = r.join([lt,gt])
-    r = r.reset_index()
-    return r
+    #r = pd.DataFrame(d,index=[0])
+    #r = r.set_index('userid')
+    #r = r.join([lt,gt])
+    #r = r.reset_index()
+    d.update(lt)
+    d.update(gt)
+    print d
+    return d
 
 
-from multiprocessing import Pool
-pool = Pool(12)
+def multi():
 
-res = []
-users = list(bill_data.userid.unique())
+    from multiprocessing import Pool
+    pool = Pool(12)
+
+    users = list(bill_data.userid.unique())
+    #u = users[:5]
+    #  获得 split time 的数据统计信息
+    rst = pool.map(test_,users)
+
+    pool.close()
+    pool.join()
+
+    features = pd.DataFrame(rst)
+
+    #fileName = '../data/train/bill_detail10.csv'
+    fileName = '../data/train/bill_detail_ad_time.csv'
+
+    #  获得
+    print features.head()
+    print "\t", fileName
+    print features.shape
+
+    features.to_csv(fileName,index=None)
+
+def merge_bill(path="bill_all_data"):
+    # bill_detail 添加了时间
+    d1 = pd.read_csv('../data/train/bill_detail_ad_time.csv')
+    d2 = pd.read_csv('../data/train/bill_detail_stage.csv')  # 数据分为 10 个段，进行统计
+    d3 = pd.read_csv('../data/train/bill_detail_time_stage52.csv')  # 按照时间进行分段
+    d = pd.merge(d1,d2,on='userid')
+    d = pd.merge(d,d3,on='userid')
+    d.fillna(-9999,inplace=True)
+    with open('../model/featurescore/amerge.txt', 'a') as f:
+        s = """
+../data/train/bill_detail_ad_time.csv  添加了对时间的统计
+../data/train/bill_detail_stage.csv    数据分为 10 个段，进行统计
+../data/train/bill_detail_time_stage52.csv  时间分为放款前后进行统计
+合并文件：.../data/train/bill_all_data.csv
+"""
+        f.writelines(s)
+    print d.head()
+    print d.shape
+    d.to_csv('../data/train/{}.csv'.format(path),index=None)
+
+if __name__=='__main__':
+    merge_bill()
 
 
-for uu in users:
-    res.append(pool.apply_async(test_,args=(uu,)))
 
-pool.close()
-pool.join()
 
-rst = [i.get() for i in res]
 
-features = reduce(lambda x,y:pd.concat([x,y],axis=0),rst)
 
-#for i in rst:
-#    features = pd.concat([features,i],axis=0)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 5 duan
+"""
 fileName = '../data/train/bill_detail10.csv'
-
-features.to_csv(fileName)
-#  获得
+features = pd.read_csv(fileName)
+re = features.columns
+features.drop(re[0],axis=1,inplace=True)
 print features.head()
-print "\t",fileName
 print features.shape
-
+"""
 """
 #  1)获取消费笔数 ,消费笔数从 sum 改成 mean
 consume_amount = bill_data[['userid','consume_amount']]

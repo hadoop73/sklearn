@@ -23,10 +23,6 @@ cols = ['pre_amount_of_bill', 'pre_repayment', 'credit_amount',
         'prepare_amount']
 sts = ['_min', '_max', '_median', '_mean', '_std', '_cnt', '_max_min']
 
-
-features = pd.DataFrame(columns=['userid'] + [ st+s+p for p in sts  for st in stage for s in cols])
-
-
 def test_(col):
     #  首先去除缺失值，获得分段
     bill_col = bill_data[['userid',col]]
@@ -47,7 +43,6 @@ def test_(col):
 
         d = {'userid':u}
         bill_user = bill_data[bill_data.userid==u]
-
         for i in range(10):
                 stg = stage[i]
                 di = bill_user[(split_point[i]<bill_user[col])&(bill_user[col]<split_point[i+1])]
@@ -68,6 +63,7 @@ from multiprocessing import Pool
 rst = []
 pool = Pool(12)
 #  按照特征咧进行处理
+
 for col in cols:
     print col
     rst.append(pool.apply_async(test_,args=(col,)))
@@ -76,10 +72,17 @@ pool.join()
 
 rst = [i.get() for i in rst]
 
-all_features = pd.merge(rst,on='userid',how='outer')
-all_features.to_csv('../data/train/bill_detail_stage.csv',index=None)
+#features = pd.DataFrame(columns=[ st+s+p for p in sts  for st in stage for s in cols])
 
-print all_features.head()
+
+features = rst[0]
+
+for i in rst[1:]:
+    features = pd.merge(features,i,on='userid',how='outer')
+
+features.to_csv('../data/train/bill_detail_stage.csv',index=None)
+
+print features.head()
 
 
 

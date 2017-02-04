@@ -349,6 +349,13 @@ def merge_bank():
     dt = pd.read_csv('../data/train/bank_2.csv')
     d = pd.merge(d1,dt,on='userid')
     d.fillna(-9999,inplace=True)
+    with open('../model/featurescore/amerge.txt', 'a') as f:
+        s = """
+../data/train/bank_5.csv  时间分为了 5 段，求收入支出的统计信息
+../data/train/bank_2.csv    统计放款前后的时间差值
+合并文件：../data/train/bank_all.csv
+"""
+        f.writelines(s)
     print d.head()
     print d.shape
     d.to_csv("../data/train/bank_all.csv",index=None)

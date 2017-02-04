@@ -100,6 +100,16 @@ browse_history.columns = names
 browse_history['browse_count'] = 1
 del browse_history_train, browse_history_test
 
+names_loan_time = ['userid','loan_time']
+loan_time_train = pd.read_csv("../../pcredit/train/loan_time_train.txt",header=None)
+loan_time_test = pd.read_csv("../../pcredit/test/loan_time_test.txt",header=None)
+loan_time = pd.concat([loan_time_train,loan_time_test],axis=0)
+loan_time.columns = names_loan_time
+
+browse_history = pd.merge(browse_history,loan_time,on='userid')
+
+del loan_time
+
 stage = ['stg1_','stg2_','stg3_','stg4_','stg5_']
 
 #  获得 10% 20% 到 90% 的数据分割点
@@ -144,6 +154,52 @@ def test_(u):
     #ftures = pd.DataFrame(d,index=[0])
     print d
     return d
+
+def test_data_split_time(u):
+    # 获得所有的用户
+    d = {'userid': u}
+    du = browse_history[browse_history.userid == u]
+    data = du[du.time <= du.loan_time]
+    # 不分阶段,统计总的一个情况,组要还是一个时间上的统计
+    brdata = data[['userid', 'browser_behavior', 'browse_count']].groupby(['userid', 'browser_behavior']).agg(sum)
+    brdata.reset_index(inplace=True)
+
+    d['browse_data' + '_min'+'_lt'] = brdata['browse_count'].min()
+    d['browse_data' + '_max'+'_lt'] = brdata['browse_count'].max()
+    d['browse_data' + '_mean'+'_lt'] = brdata['browse_count'].mean()
+    d['browse_data' + '_median'+'_lt'] = brdata['browse_count'].median()
+    d['browse_data' + '_std'+'_lt'] = brdata['browse_count'].std()
+    d['browse_data' + '_count'+'_lt'] = brdata['browse_count'].count()
+    d['browse_data' + '_var'+'_lt'] = brdata['browse_count'].var()
+    d['browse_data_log_cnt'+'_lt'] = brdata['browse_count'].sum()
+    d['browse_data_max_min_lt'] = brdata['browse_count'].max() - brdata['browse_count'].min()
+    del brdata,data
+
+    data = du[du.time > du.loan_time]
+    # 不分阶段,统计总的一个情况,组要还是一个时间上的统计
+    brdata = data[['userid', 'browser_behavior', 'browse_count']].groupby(['userid', 'browser_behavior']).agg(sum)
+    brdata.reset_index(inplace=True)
+    d['browse_data' + '_min'+'_gt'] = brdata['browse_count'].min()
+    d['browse_data' + '_max'+'_gt'] = brdata['browse_count'].max()
+    d['browse_data' + '_mean'+'_gt'] = brdata['browse_count'].mean()
+    d['browse_data' + '_median'+'_gt'] = brdata['browse_count'].median()
+    d['browse_data' + '_std'+'_gt'] = brdata['browse_count'].std()
+    d['browse_data' + '_count'+'_gt'] = brdata['browse_count'].count()
+    d['browse_data' + '_var'+'_gt'] = brdata['browse_count'].var()
+    d['browse_data_log_cnt'+'_gt'] = brdata['browse_count'].sum()
+    d['browse_data_max_min_gt'] = brdata['browse_count'].max() - brdata['browse_count'].min()
+
+    # minus
+    d['browse_data_min_gt_lt'] = d['browse_data' + '_min'+'_gt'] - d['browse_data' + '_min'+'_lt']
+    d['browse_data_max_gt_lt'] = d['browse_data' + '_max' + '_gt'] - d['browse_data' + '_max' + '_lt']
+    d['browse_data_mean_gt_lt'] = d['browse_data' + '_mean' + '_gt'] - d['browse_data' + '_mean' + '_lt']
+    d['browse_data_count_gt_lt'] = d['browse_data' + '_count' + '_gt'] - d['browse_data' + '_count' + '_lt']
+    d['browse_data_log_gt_lt'] = d['browse_data_log_cnt'+'_gt'] - d['browse_data_log_cnt'+'_lt']
+    del brdata, data,du
+    print d
+    return d
+
+
 
 #  对浏览数据进行统计
 def test_data(u):
@@ -247,22 +303,35 @@ def multi_browser():
     pool = Pool(4)
 
     users = list(browse_history.userid.unique())
-    rst = pool.map(test_data,users)
+    u = users[:5]
+    rst = pool.map(test_data_split_time,users)
 
     features = pd.DataFrame(rst)
     features.fillna(-9999,inplace=True)
     print features.head()
     print features.shape
-    features.to_csv('../data/train/browse_data_stage5.csv', index=None)  # test_data  对browser data没有数量筛选，#  对浏览数据进行统计
+    features.to_csv('../data/train/browse_data_split_time.csv', index=None)# test_data_split_time,这是浏览数据的前后放款统计
+    #features.to_csv('../data/train/browse_data_stage5.csv', index=None)  # test_data  对browser data没有数量筛选，#  对浏览数据进行统计
     #features.to_csv('../data/train/browse_stage5.csv',index=None)  # 没有数量筛选
     #features.to_csv('../data/train/browse_split_time.csv',index=None)  # 按照放款时间进行拆分，没有筛选数据了
 
 def merge_browser():
+    # 效果不好
+    #dd2 = pd.read_csv('../data/train/browse_data_split_time.csv')   #  test_data_split_time,这是浏览数据的前后放款统计
     dd = pd.read_csv('../data/train/browse_data_stage5.csv') # test_data  对browser data没有数量筛选
     d = pd.read_csv('../data/train/browse_stage5.csv')  # 5 分段数据筛选数据大于 2 的数据进行统计
     d1 = pd.read_csv('../data/train/browse_split_time.csv')   # 时间分为放款前后，筛选数据大于 2 的数据进行统计
     data = pd.merge(d,d1,on='userid')
     data = pd.merge(data,dd,on='userid')
+    #data = pd.merge(data, dd2, on='userid')
+    with open('../model/featurescore/amerge.txt','a') as f:
+        s = """
+../data/train/browse_data_stage5.csv test_data  对browser data没有数量筛选
+../data/train/browse_stage5.csv    5 分段数据进行统计
+../data/train/browse_split_time.csv  时间分为放款前后进行统计
+合并文件：../data/train/browser_all.csv
+"""
+        f.writelines(s)
     print data.head()
     print data.shape
     data.to_csv('../data/train/browser_all.csv',index=None)
