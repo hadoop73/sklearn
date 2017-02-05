@@ -181,6 +181,7 @@ def test_(user):
 
 
 
+
 # 统计了银行数据
 def an_bill_bank():
     # bank_id
@@ -219,7 +220,6 @@ def an_bill_prepare_amount():
     print data.head()
     data.to_csv('../data/train/prepare_amount_0.csv',index=None)
 
-
 def an_bill_avail_amount():
     data = bill_data[bill_data['avail_amount'] == 0][['userid', 'avail_amount']]
     data['avail_amount0'] = 1
@@ -237,7 +237,6 @@ def an_bill_circ_interest():
 
     print data.head()
     data.to_csv('../data/train/bill_circ_interest.csv',index=None)
-
 
 def an_bill_adjust_amount():
     data = bill_data[bill_data['adjust_amount'] == 0][['userid', 'adjust_amount']]
@@ -257,7 +256,6 @@ def an_bill_adjust_amount():
     t = pd.merge(t, tb, on='userid', how='outer')
     print t.head()
     t.to_csv('../data/train/bill_adjust_amount.csv',index=None)
-
 
 def an_bill_amount_of_bill():
     data = bill_data[bill_data['amount_of_bill'] == 0][['userid', 'amount_of_bill']]
@@ -308,7 +306,7 @@ def multi():
 
     features.to_csv(fileName,index=None)
 
-def merge_bill(path="bill_all_data0"):
+def merge_bill(path="bill_all_data1"):
     # bill_detail 添加了时间
     d1 = pd.read_csv('../data/train/bill_detail_ad_time.csv')
     d2 = pd.read_csv('../data/train/bill_detail_stage.csv')  # 数据分为 10 个段，进行统计
@@ -332,7 +330,7 @@ def merge_bill(path="bill_all_data0"):
     d0 = pd.read_csv('../data/train/bill_consume_amount.csv')
     d = pd.merge(d, d0, on='userid')
 
-    #d.fillna(-9999,inplace=True)
+    d.fillna(-9999,inplace=True)
     with open('../model/featurescore/amerge.txt', 'a') as f:
         s = """
 ../data/train/bill_detail_ad_time.csv  添加了对时间的统计
@@ -349,10 +347,6 @@ def merge_bill(path="bill_all_data0"):
 
 if __name__=='__main__':
     merge_bill()
-
-
-
-
 
 
 
