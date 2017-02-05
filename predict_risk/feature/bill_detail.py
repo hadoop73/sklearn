@@ -181,9 +181,110 @@ def test_(user):
 
 
 
+# 统计了银行数据
+def an_bill_bank():
+    # bank_id
+    data = bill_data[bill_data['bank_id'] < 20][['userid','bank_id']]
+    data.drop_duplicates(inplace=True)
+    data['bank_id'] = data['bank_id'].astype('str')
+    t = data.groupby('userid')['bank_id'].agg(lambda x:":".join(x)).reset_index()
+    t['bank_n'] = t['bank_id'].apply(lambda x:len(x.split(":")))
+    t['bank_ids'] = t['bank_id'].apply(lambda x:[ int(i) for i in  x.split(":")])
+    for j in range(1,17):
+        t['bank_' + str(j)] = t['bank_ids'].apply(lambda x:1 if j in x else 0)
+    t.drop(['bank_id','bank_ids'],axis=1,inplace=True)
+    print t.head()
+    print t.shape
+
+    t.to_csv('../data/train/bill_bank.csv',index=None)
+
+# prepare_amount 图统计
+def an_bill_prepare_amount():
+    data = bill_data[bill_data['prepare_amount'] == 0][['userid', 'prepare_amount']]
+    data.drop_duplicates(inplace=True)
+    data['prepare_amount0'] = 1
+    data.drop('prepare_amount',axis=1,inplace=True)
+
+    t = bill_data[bill_data['prepare_amount'] > 0]
+    t['prepare_amount24'] = t['prepare_amount'].apply(lambda x:1 if x >=24 else 0)
+    ta = t[['userid','prepare_amount24']]
+    ta.drop_duplicates(inplace=True)
+
+    t['prepare_amount20'] = t['prepare_amount'].apply(lambda x: 1 if x == 20 else 0)
+    tb = t[['userid','prepare_amount20']]
+    tb.drop_duplicates(inplace=True)
+
+    data = pd.merge(data,ta,on='userid',how='outer')
+    data = pd.merge(data, tb, on='userid', how='outer')
+    print data.head()
+    data.to_csv('../data/train/prepare_amount_0.csv',index=None)
+
+
+def an_bill_avail_amount():
+    data = bill_data[bill_data['avail_amount'] == 0][['userid', 'avail_amount']]
+    data['avail_amount0'] = 1
+    data.drop('avail_amount',axis=1,inplace=True)
+    data.drop_duplicates(inplace=True)
+
+    print data.head()
+    data.to_csv('../data/train/bill_avail_amount.csv',index=None)
+
+def an_bill_circ_interest():
+    data = bill_data[bill_data['circ_interest'] == 0][['userid', 'circ_interest']]
+    data['circ_interest0'] = 1
+    data.drop('circ_interest',axis=1,inplace=True)
+    data.drop_duplicates(inplace=True)
+
+    print data.head()
+    data.to_csv('../data/train/bill_circ_interest.csv',index=None)
+
+
+def an_bill_adjust_amount():
+    data = bill_data[bill_data['adjust_amount'] == 0][['userid', 'adjust_amount']]
+    data['adjust_amount0'] = 1
+
+    t = data[['userid','adjust_amount0']]
+    t.drop_duplicates(inplace=True)
+
+    data['adjust_lt0'] = data['adjust_amount'].apply(lambda x:1 if(x>-23) and (x < -18) else 0)
+    ta = data[['userid','adjust_lt0']]
+    ta.drop_duplicates(inplace=True)
+
+    data['adjust_gt0'] = data['adjust_amount'].apply(lambda x: 1 if (x > 18) and (x < 23) else 0)
+    tb = data[['userid', 'adjust_gt0']]
+    tb.drop_duplicates(inplace=True)
+    t = pd.merge(t,ta,on='userid',how='outer')
+    t = pd.merge(t, tb, on='userid', how='outer')
+    print t.head()
+    t.to_csv('../data/train/bill_adjust_amount.csv',index=None)
+
+
+def an_bill_amount_of_bill():
+    data = bill_data[bill_data['amount_of_bill'] == 0][['userid', 'amount_of_bill']]
+    data['amount_of_bill'] = 1
+
+    t = data[['userid','amount_of_bill']]
+    t.drop_duplicates(inplace=True)
+    print t.head()
+    t.to_csv('../data/train/bill_amount_of_bill.csv', index=None)
+
+def an_bill_consume_amount():
+    data = bill_data[bill_data['consume_amount']<12][['userid', 'consume_amount']]
+    data.drop_duplicates(inplace=True)
+    data['consume_amount'] = data['consume_amount'].astype('str')
+    t = data.groupby('userid')['consume_amount'].agg(lambda x:":".join(x)).reset_index()
+    t['consume_amount_n'] = t['consume_amount'].apply(lambda x:len(x.split(":")))
+    t['consume_amounts'] = t['consume_amount'].apply(lambda x:[ int(i) for i in  x.split(":")])
+    for j in range(0,12):
+        t['consume_amount_' + str(j)] = t['consume_amounts'].apply(lambda x:1 if j in x else 0)
+    t.drop(['consume_amount','consume_amounts'],axis=1,inplace=True)
+    print t.head()
+    print t.shape
+
+    t.to_csv('../data/train/bill_consume_amount.csv',index=None)
+
 
 def multi():
-
     from multiprocessing import Pool
     pool = Pool(12)
 
@@ -207,20 +308,39 @@ def multi():
 
     features.to_csv(fileName,index=None)
 
-def merge_bill(path="bill_all_data"):
+def merge_bill(path="bill_all_data0"):
     # bill_detail 添加了时间
     d1 = pd.read_csv('../data/train/bill_detail_ad_time.csv')
     d2 = pd.read_csv('../data/train/bill_detail_stage.csv')  # 数据分为 10 个段，进行统计
     d3 = pd.read_csv('../data/train/bill_detail_time_stage52.csv')  # 按照时间进行分段
+
     d = pd.merge(d1,d2,on='userid')
     d = pd.merge(d,d3,on='userid')
-    d.fillna(-9999,inplace=True)
+
+    d4 = pd.read_csv('../data/train/bill_bank.csv')
+    d = pd.merge(d, d4, on='userid')
+    d5 = pd.read_csv('../data/train/prepare_amount_0.csv')
+    d = pd.merge(d, d5, on='userid')
+    d6 = pd.read_csv('../data/train/bill_avail_amount.csv')
+    d = pd.merge(d, d6, on='userid')
+    d7 = pd.read_csv('../data/train/bill_circ_interest.csv')
+    d = pd.merge(d, d7, on='userid')
+    d8 = pd.read_csv('../data/train/bill_adjust_amount.csv')
+    d = pd.merge(d, d8, on='userid')
+    d9 = pd.read_csv('../data/train/bill_amount_of_bill.csv')
+    d = pd.merge(d, d9, on='userid')
+    d0 = pd.read_csv('../data/train/bill_consume_amount.csv')
+    d = pd.merge(d, d0, on='userid')
+
+    #d.fillna(-9999,inplace=True)
     with open('../model/featurescore/amerge.txt', 'a') as f:
         s = """
 ../data/train/bill_detail_ad_time.csv  添加了对时间的统计
 ../data/train/bill_detail_stage.csv    数据分为 10 个段，进行统计
 ../data/train/bill_detail_time_stage52.csv  时间分为放款前后进行统计
-合并文件：.../data/train/bill_all_data.csv
+../data/train/bill_bank.csv  统计银行卡
+../data/train/prepare_amount_0.csv  统计 0 的情况
+合并文件：.../data/train/bill_all_data0.csv
 """
         f.writelines(s)
     print d.head()
@@ -276,6 +396,11 @@ re = features.columns
 features.drop(re[0],axis=1,inplace=True)
 print features.head()
 print features.shape
+
+
+
+
+
 """
 """
 #  1)获取消费笔数 ,消费笔数从 sum 改成 mean
