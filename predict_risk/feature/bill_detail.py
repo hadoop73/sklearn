@@ -66,6 +66,7 @@ bill_train = pd.read_csv("../../pcredit/train/bill_detail_train.txt", header=Non
 bill_test = pd.read_csv("../../pcredit/test/bill_detail_test.txt", header=None)
 
 bill_data = pd.concat([bill_train, bill_test])
+del bill_train,bill_test
 bill_data.columns = names
 bill_data.loc[bill_data['consume_amount']>60,'consume_amount'] = 60
 bill_data.loc[bill_data['prepare_amount']>25,'prepare_amount'] = 23
@@ -77,16 +78,12 @@ cols = ['time','pre_amount_of_bill','pre_repayment','credit_amount',
 sts = ['_rate','_min','_max','_median','_mean','_std','_cnt','_max_min']
 
 
-features = pd.DataFrame(columns=['userid'] + [ s+p for p in sts for s in cols])
-
-
-
 names_loan_time = ['userid','loan_time']
 loan_time_train = pd.read_csv("../../pcredit/train/loan_time_train.txt",header=None)
 loan_time_test = pd.read_csv("../../pcredit/test/loan_time_test.txt",header=None)
 
 loan_time = pd.concat([loan_time_train,loan_time_test],axis=0)
-
+del loan_time_train,loan_time_test
 loan_time.columns = names_loan_time
 
 #loan_time = loan_time.set_index('userid')
@@ -181,6 +178,8 @@ def test_(user):
     d.update(gt)
     print d
     return d
+
+
 
 
 def multi():
