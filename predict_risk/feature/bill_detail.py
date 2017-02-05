@@ -306,7 +306,7 @@ def multi():
 
     features.to_csv(fileName,index=None)
 
-def merge_bill(path="bill_all_data1"):
+def merge_bill(path="bill_all_data587"):
     # bill_detail 添加了时间
     d1 = pd.read_csv('../data/train/bill_detail_ad_time.csv')
     d2 = pd.read_csv('../data/train/bill_detail_stage.csv')  # 数据分为 10 个段，进行统计
@@ -345,8 +345,31 @@ def merge_bill(path="bill_all_data1"):
     print d.shape
     d.to_csv('../data/train/{}.csv'.format(path),index=None)
 
+
+def merge_bill0(path="bill_all_data1"):
+    # bill_detail 添加了时间
+    d1 = pd.read_csv('../data/train/bill_detail_ad_time.csv')
+    d2 = pd.read_csv('../data/train/bill_detail_stage.csv')  # 数据分为 10 个段，进行统计
+    d3 = pd.read_csv('../data/train/bill_dt_time_5.csv')  # 按照时间进行分段
+    d = pd.merge(d1,d2,on='userid')
+    d = pd.merge(d,d3,on='userid')
+    #d.fillna(-9999,inplace=True)
+    with open('../model/featurescore/amerge.txt', 'a') as f:
+        s = """
+../data/train/bill_detail_ad_time.csv  添加了对时间的统计
+../data/train/bill_detail_stage.csv    数据分为 10 个段，进行统计
+../data/train/bill_dt_time_5.csv  时间分为 5 段,时间进行了筛选
+
+合并文件：.../data/train/bill_all_data587.csv
+"""
+        f.writelines(s)
+    print d.head()
+    print d.shape
+    d.to_csv('../data/train/{}.csv'.format(path),index=None)
+
+
 if __name__=='__main__':
-    merge_bill()
+    merge_bill0()
 
 
 
