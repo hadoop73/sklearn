@@ -179,8 +179,41 @@ def test_(user):
     print d
     return d
 
+# 1) 偿还历史
+# 2) 统计银行卡数量, 3) 使用年限也就是 time最小值
+# 4) 新开立的信用卡账号,数量,新开立信用账户时间,也就是每个账户的最小 time差的最小值
+# 5) 正在使用的信用卡类型,时间最大的那张银行卡
+def fico():
+    # 2) 统计银行卡数量
+    data = bill_data[['userid', 'bank_id']]
+    data.drop_duplicates(inplace=True)
+    data['bank_id'] = data['bank_id'].astype('str')
+    t = data.groupby('userid')['bank_id'].agg(lambda x: ":".join(x)).reset_index()
+    t['bank_n'] = t['bank_id'].apply(lambda x: len(x.split(":")))
+    t['bank_ids'] = t['bank_id'].apply(lambda x: [int(i) for i in x.split(":")])
+    t.drop(['bank_id', 'bank_ids'], axis=1, inplace=True)
+    #print t.head(
 
+    # 3) 使用年限
+    d = bill_data[bill_data.time!=0][['userid', 'time']]
+    tlong = d.groupby('userid')['time'].agg(min).reset_index()
+    tlong.rename(columns={'time':'time_long'},inplace=True)
+    #print tlong.head()
 
+    # 1) 历史记录
+    # 上期账单 "pre_amount_of_bill", 上期还款 "pre_repayment",
+    damount = bill_data[(bill_data.pre_amount_of_bill!=0)&(bill_data.pre_repayment!=0)][['userid', 'pre_amount_of_bill','pre_repayment']]
+    damount['pre_amount_minus'] = damount['pre_repayment'] - damount['pre_amount_of_bill']
+    ta = damount.groupby('userid')['pre_amount_minus'].agg({"pre_amount_minus_min":np.min,"pre_amount_minus_mean":np.mean,"pre_amount_minus_median":np.median}).reset_index()
+    damount['pre_amount_minus_lt0'] = damount['pre_amount_minus'].apply(lambda x:1 if x < 0 else 0)
+    tb = damount.groupby('userid')['pre_amount_minus_lt0'].agg({"pre_amount_minus_lt0_sum":np.sum}).reset_index()
+    ta = pd.merge(ta,tb,on='userid')
+    #print ta.head()
+
+    data = pd.merge(t,tlong,on='userid')
+    data = pd.merge(data, ta, on='userid')
+    print data.head()
+    data.to_csv("../data/train/fico.csv",index=None)
 
 # 统计了银行数据
 def an_bill_bank():
@@ -368,8 +401,20 @@ def merge_bill0(path="bill_all_data1"):
     d.to_csv('../data/train/{}.csv'.format(path),index=None)
 
 
+def merge_2(d1="bill_all_data1",d2="fico",p="bill_data_all"):
+    da = pd.read_csv('../data/train/{}.csv'.format(d1))
+    db = pd.read_csv('../data/train/{}.csv'.format(d2))
+
+    data = pd.merge(da,db,on='userid')
+    print data.head()
+    print data.shape
+    data.to_csv("../data/train/{}.csv".format(p),index=None)
+
+
 if __name__=='__main__':
-    merge_bill0()
+    import warnings
+    warnings.simplefilter("ignore")
+    merge_2()
 
 
 
