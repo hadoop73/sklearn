@@ -65,7 +65,14 @@ def filla_var_null(dir='data1'):
     data.to_csv(f,index=None)
 
 
-
+def getData12(dir="all_train_1"):
+    train,target,test = getDatas(dir)
+    train_X = train.iloc[:-12000,:]
+    train_y = target.iloc[:-12000,:]
+    test_X = train.iloc[-12000:, :]
+    test_y = target.iloc[-12000:, :]
+    del train,target
+    return train_X,train_y,test_X,test_y,test
 
 def getDatas(dir='train_data_'):
     loan_data = pd.read_csv("../data/{}.csv".format(dir))
@@ -113,6 +120,38 @@ def getDatasR(dir='train_data_'):
 
     return train_X, test_X, train_y, test_y,test
 
+def get3Datas(dir='train_data_'):
+    train, target, test = getDatas(dir)
+    ind_train = np.where(target > 0.5)[0]  # 获得训练数据为 1 的行
+    label1 = target.iloc[ind_train]
+    trainX1 = train.iloc[ind_train]
+
+    ind_train0 = np.where(target < 0.5)[0]  # 获得训练数据为 0 的行
+    label0 = target.iloc[ind_train0]
+    trainX0 = train.iloc[ind_train0]
+    del train,target
+    for k in [0.3,0.5]:
+        train_X, test_X, train_y, test_y = train_test_split(trainX0,
+                                                            label0,
+                                                            test_size=k,
+                                                            random_state=0)
+        X = pd.concat([trainX1,test_X],axis=0)
+        del test_X
+        X = X.sort_index()
+        y = pd.concat([label1,test_y], axis=0)
+        del test_y
+        y = y.sort_index()
+        yield X,y,test
+        trainX0 = train_X
+        label0 = train_y
+    X = pd.concat([trainX1, trainX0], axis=0)
+    del trainX1, trainX0
+    X = X.sort_index()
+    y = pd.concat([label1, label0], axis=0)
+    del label1, label0
+    y = y.sort_index()
+    yield X, y, test
+
 
 def getDatas2(dir='train_data_',k=0.2):
     train, target, test = getDatas(dir)
@@ -122,9 +161,9 @@ def getDatas2(dir='train_data_',k=0.2):
 
     ind_train = np.where(target > 0.5)[0]  # 获得训练数据为 1 的行
     label = target.iloc[ind_train]
-
     trainX = train.iloc[ind_train]
-    ind_train0 = np.where(target < 0.5)[0]  # 获得训练数据为 1 的行
+
+    ind_train0 = np.where(target < 0.5)[0]  # 获得训练数据为 0 的行
     label0 = target.iloc[ind_train0]
     trainX0 = train.iloc[ind_train0]
 
@@ -132,12 +171,12 @@ def getDatas2(dir='train_data_',k=0.2):
 
     train_X, test_X, train_y, test_y = train_test_split(trainX,
                                                         label,
-                                                        test_size=k,
+                                                        test_size=0.25,
                                                         random_state=0)
     del trainX,label
     train_X0, test_X0, train_y0, test_y0 = train_test_split(trainX0,
                                                             label0,
-                                                            test_size=k,
+                                                            test_size=0.3,
                                                             random_state=0)
 
     del trainX0,label0
@@ -157,47 +196,53 @@ def getDatas2(dir='train_data_',k=0.2):
     test_y = pd.concat([test_y, test_y0],axis=0)
     del test_y0
     test_y = test_y.sort_index()
-    return train_X, test_X, train_y, test_y, test
+    return train_X, train_y, test_X, test_y, test
 
 
-def getDatas3(dir='train_data_'):
+def getDatas3(dir='train_data_',k=0.3):
     train, target, test = getDatas(dir)
     from sklearn import metrics
 
     from sklearn.cross_validation import train_test_split
 
-    ind_train = np.where(target > 0)[0]  # 获得训练数据为 1 的行
-
+    ind_train = np.where(target > 0.5)[0]  # 获得训练数据为 1 的行
     label = target.iloc[ind_train]
-    # print label
-
     trainX = train.iloc[ind_train]
 
-    ind_train0 = np.where(target == 0)[0]  # 获得训练数据为 1 的行
+    ind_train0 = np.where(target < 0.5)[0]  # 获得训练数据为 0 的行
     label0 = target.iloc[ind_train0]
     trainX0 = train.iloc[ind_train0]
 
+    del train
+
     train_X, test_X, train_y, test_y = train_test_split(trainX,
                                                         label,
-                                                        test_size=0.2,
-                                                        random_state=0)
-
+                                                        test_size=0.25,
+                                                        random_state=2017)
+    del trainX,label
     train_X0, test_X0, train_y0, test_y0 = train_test_split(trainX0,
                                                             label0,
-                                                            test_size=0.2,
-                                                            random_state=0)
-    train_X = pd.concat([train_X, train_X0])
+                                                            test_size=0.3,
+                                                            random_state=2017)
+
+    del trainX0,label0
+
+    train_X = pd.concat([train_X, train_X0],axis=0)
+    del train_X0
     train_X = train_X.sort_index()
 
-    test_X = pd.concat([test_X, test_X0])
+    test_X = pd.concat([test_X, test_X0],axis=0)
+    del test_X0
     test_X = test_X.sort_index()
 
-    train_y = pd.concat([train_y, train_y0])
+    train_y = pd.concat([train_y, train_y0],axis=0)
+    del train_y0
     train_y = train_y.sort_index()
 
-    test_y = pd.concat([test_y, test_y0])
+    test_y = pd.concat([test_y, test_y0],axis=0)
+    del test_y0
     test_y = test_y.sort_index()
-    return train_X, test_X, train_y, test_y, test
+    return train_X, train_y, test_X, test_y, test
 
 
 def getXGBoostDatas(dir='train_data'):
@@ -220,8 +265,9 @@ def getXGBoostDatas(dir='train_data'):
 
 
 if __name__=='__main__':
-    merge_m()
-
+    train_X, train_y, test_X, test_y, test = getData12()
+    print train_X.tail()
+    print test_X.head()
 
 """
 dir='/train/data_all'

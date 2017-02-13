@@ -35,10 +35,11 @@ logger.addHandler(console_handler)
 
 
 
-def gbdt_a(n_estimators=100,rate=0.1,max_depth=5,rand_state=0,name='train_data_'):
+def gbdt_a(n_estimators=300,rate=0.1,max_depth=5,rand_state=0,name='train_data_5'):
 
     train,target,test = getDatas(name)
-
+    print "data :",name
+    print train.shape
     from sklearn.tree import DecisionTreeRegressor
     from sklearn.ensemble import GradientBoostingRegressor
 
@@ -98,20 +99,22 @@ def gbdt(train,target,test,n):
 import random
 
 if  __name__ == '__main__':
+    gbdt_a(300)
 
 
+def  find_X():
     random_seed = range(1000,2000,20)
     rate = [i/1000.0 for i in range(100,200,2)]
-    max_depth = [3,4,5]
-    n_estimators = range(90,300,2)
+    max_depth = [6,4,5,8]
+    n_estimators = range(90,500,2)
 
     random.shuffle(random_seed)
     random.shuffle(rate)
     random.shuffle(max_depth)
     random.shuffle(n_estimators)
 
-    for i in range(5):
-        gbdt_a(n_estimators[i],rate[i],max_depth[i%3],random_seed[i])
+    for i in range(25):
+        gbdt_a(n_estimators[i],rate[i],max_depth[i%4],random_seed[i])
 
 
 

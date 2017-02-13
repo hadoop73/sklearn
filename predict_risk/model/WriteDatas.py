@@ -12,6 +12,7 @@ def  writeDatas(data,test,name='ok'):
     print result.head(5)
     # 输出结果
     result.to_csv('../data/result_{}.csv'.format(name))
+    return result
 
 
 
