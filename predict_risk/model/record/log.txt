@@ -1,0 +1,96 @@
+gamma= 0.2  scale_pos_weight= 4  min_child_weight= 1.5  max_depth= 6  lamda= 60
+subsamp= 0.8  col_bytree= 0.8  col_bylevel= 0.7  eta= 0.12
+  best_ntree_limit:139   best_iteration= 138
+features scores: 6078
+K-S:0.477482607819     findx
+AUC:0.807808160017
+
+data: data_all_bill_ban_cut10_selectCD_loan_time_f43
+gamma= 0.2 scale_pos_weight= 4  min_child_weight= 1.5  max_depth= 6  lamda= 60
+subsamp= 0.8  col_bytree= 0.8  col_bylevel= 0.7  eta= 0.12
+  best_ntree_limit:139   best_iteration= 138
+features scores: 1952
+K-S:0.677326195238      线上 0.44995
+AUC:0.916278093591
+
+任务：把 browser 的数据去重，bank 的数据中原来数据的生成添加进来，写到一块
+
+更新 browser 的数据
+
+
+分段改为最小熵
+
+
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.1 scale_pos_weight= 3  min_child_weight= 1.2  max_depth= 6  lamda= 360
+subsamp= 0.9  col_bytree= 0.6  col_bylevel= 0.5  eta= 0.18
+  best_ntree_limit:161   best_iteration= 160
+features scores: 8076
+K-S:0.680449807676
+AUC:0.920885805171
+
+times: 8
+gamma= 0.1  scale_pos_weight= 3  min_child_weight= 1.2  max_depth= 6  lamda= 360
+subsamp= 0.9  col_bytree= 0.6  col_bylevel= 0.5  eta= 0.18
+  best_ntree_limit:162   best_iteration= 161
+features scores: 675
+K-S:0.543103067559    线上 0.45554
+AUC:0.843115289094
+
+
+
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.08 scale_pos_weight= 4  min_child_weight= 1.0  max_depth= 7  lamda= 310
+subsamp= 0.7  col_bytree= 0.8  col_bylevel= 0.7  eta= 0.05
+  best_ntree_limit:303   best_iteration= 302
+features scores: 437
+K-S:0.640121043796
+AUC:0.899674925582
+
+times: 7
+gamma= 0.08  scale_pos_weight= 4  min_child_weight= 1.0  max_depth= 7  lamda= 310
+subsamp= 0.7  col_bytree= 0.8  col_bylevel= 0.7  eta= 0.05
+  best_ntree_limit:303   best_iteration= 302
+features scores: 9083
+K-S:0.532317908336
+AUC:0.841069274633    0.45037
+
+
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.1 scale_pos_weight= 4  min_child_weight= 0.8  max_depth= 5  lamda= 360
+subsamp= 0.9  col_bytree= 0.5  col_bylevel= 0.8  eta= 0.1
+  best_ntree_limit:228   best_iteration= 227
+features scores: 7580
+K-S:0.619010758017
+AUC:0.890703445154
+
+times: 5
+gamma= 0.1  scale_pos_weight= 4  min_child_weight= 0.8  max_depth= 5  lamda= 360
+subsamp= 0.9  col_bytree= 0.5  col_bylevel= 0.8  eta= 0.1
+  best_ntree_limit:228   best_iteration= 227
+features scores: 6898
+K-S:0.533371689835   0.449
+AUC:0.841276270166
+
+
+getData12
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.15 scale_pos_weight= 3  min_child_weight= 0.5  max_depth= 9  lamda= 160
+subsamp= 0.9  col_bytree= 0.8  col_bylevel= 0.5  eta= 0.12
+  best_ntree_limit:105   best_iteration= 104
+features scores: 4771
+K-S:0.719243477156   0.445
+AUC:0.931929981483
+
+
+times: 8
+gamma= 0.15  scale_pos_weight= 3  min_child_weight= 0.5  max_depth= 9  lamda= 160
+subsamp= 0.9  col_bytree= 0.8  col_bylevel= 0.5  eta= 0.12
+  best_ntree_limit:105   best_iteration= 104
+features scores: 8896
+K-S:0.482702889668
+AUC:0.806758651422
+
