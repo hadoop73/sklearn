@@ -1,0 +1,232 @@
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.08 scale_pos_weight= 4  min_child_weight= 1.0  max_depth= 7  lamda= 360
+subsamp= 0.8  col_bytree= 0.8  col_bylevel= 0.7  eta= 0.1
+  best_ntree_limit:156   best_iteration= 155
+features scores: 939
+K-S:0.61874409392
+AUC:0.886459735704
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.08 scale_pos_weight= 4  min_child_weight= 0.8  max_depth= 9  lamda= 310
+subsamp= 0.6  col_bytree= 0.5  col_bylevel= 0.6  eta= 0.18
+  best_ntree_limit:73   best_iteration= 72
+features scores: 9214
+K-S:0.616402921485
+AUC:0.885931293839
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.1 scale_pos_weight= 4  min_child_weight= 0.5  max_depth= 4  lamda= 60
+subsamp= 0.7  col_bytree= 0.6  col_bylevel= 0.7  eta= 0.12
+  best_ntree_limit:142   best_iteration= 141
+features scores: 1245
+K-S:0.566260124538
+AUC:0.860467550122
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.15 scale_pos_weight= 3  min_child_weight= 1.2  max_depth= 7  lamda= 260
+subsamp= 0.9  col_bytree= 0.8  col_bylevel= 0.5  eta= 0.05
+  best_ntree_limit:238   best_iteration= 237
+features scores: 7283
+K-S:0.614700728365
+AUC:0.883568085575
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.08 scale_pos_weight= 4  min_child_weight= 1.0  max_depth= 10  lamda= 210
+subsamp= 0.6  col_bytree= 0.5  col_bylevel= 0.6  eta= 0.1
+  best_ntree_limit:70   best_iteration= 69
+features scores: 9627
+K-S:0.590806962796
+AUC:0.872065532285
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.2 scale_pos_weight= 3  min_child_weight= 0.8  max_depth= 5  lamda= 10
+subsamp= 0.8  col_bytree= 0.7  col_bylevel= 0.8  eta= 0.18
+  best_ntree_limit:74   best_iteration= 73
+features scores: 9278
+K-S:0.630895927827
+AUC:0.894328019494
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.15 scale_pos_weight= 3  min_child_weight= 0.5  max_depth= 9  lamda= 160
+subsamp= 0.9  col_bytree= 0.8  col_bylevel= 0.5  eta= 0.12
+  best_ntree_limit:105   best_iteration= 104
+features scores: 4771
+K-S:0.719243477156
+AUC:0.931929981483
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.1 scale_pos_weight= 4  min_child_weight= 1.0  max_depth= 6  lamda= 260
+subsamp= 0.6  col_bytree= 0.5  col_bylevel= 0.8  eta= 0.1
+  best_ntree_limit:140   best_iteration= 139
+features scores: 4166
+K-S:0.577790416696
+AUC:0.86588328798
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.2 scale_pos_weight= 3  min_child_weight= 0.8  max_depth= 10  lamda= 210
+subsamp= 0.8  col_bytree= 0.6  col_bylevel= 0.5  eta= 0.12
+  best_ntree_limit:142   best_iteration= 141
+features scores: 7766
+K-S:0.75858477667
+AUC:0.945048614979
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.1 scale_pos_weight= 4  min_child_weight= 0.5  max_depth= 8  lamda= 60
+subsamp= 0.9  col_bytree= 0.5  col_bylevel= 0.8  eta= 0.18
+  best_ntree_limit:62   best_iteration= 61
+features scores: 6531
+K-S:0.738919653148
+AUC:0.94389621755
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.2 scale_pos_weight= 3  min_child_weight= 1.0  max_depth= 6  lamda= 210
+subsamp= 0.8  col_bytree= 0.6  col_bylevel= 0.6  eta= 0.05
+  best_ntree_limit:277   best_iteration= 276
+features scores: 3620
+K-S:0.62376136204
+AUC:0.89259166841
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.08 scale_pos_weight= 4  min_child_weight= 1.2  max_depth= 9  lamda= 110
+subsamp= 0.7  col_bytree= 0.8  col_bylevel= 0.7  eta= 0.12
+  best_ntree_limit:62   best_iteration= 61
+features scores: 5379
+K-S:0.656091537914
+AUC:0.907872880246
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.15 scale_pos_weight= 3  min_child_weight= 1.5  max_depth= 10  lamda= 10
+subsamp= 0.6  col_bytree= 0.7  col_bylevel= 0.5  eta= 0.01
+  best_ntree_limit:380   best_iteration= 379
+features scores: 6947
+K-S:0.729741694724
+AUC:0.937835536328
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.1 scale_pos_weight= 4  min_child_weight= 0.8  max_depth= 5  lamda= 360
+subsamp= 0.9  col_bytree= 0.5  col_bylevel= 0.8  eta= 0.1
+  best_ntree_limit:228   best_iteration= 227
+features scores: 7580
+K-S:0.619010758017
+AUC:0.890703445154
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.2 scale_pos_weight= 3  min_child_weight= 0.5  max_depth= 4  lamda= 260
+subsamp= 0.8  col_bytree= 0.6  col_bylevel= 0.6  eta= 0.18
+  best_ntree_limit:146   best_iteration= 145
+features scores: 3023
+K-S:0.595320302346
+AUC:0.879972780634
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.08 scale_pos_weight= 4  min_child_weight= 1.0  max_depth= 7  lamda= 310
+subsamp= 0.7  col_bytree= 0.8  col_bylevel= 0.7  eta= 0.05
+  best_ntree_limit:303   best_iteration= 302
+features scores: 437
+K-S:0.640121043796
+AUC:0.899674925582
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.15 scale_pos_weight= 3  min_child_weight= 1.2  max_depth= 8  lamda= 160
+subsamp= 0.6  col_bytree= 0.7  col_bylevel= 0.5  eta= 0.12
+  best_ntree_limit:197   best_iteration= 196
+features scores: 4221
+K-S:0.763924422153
+AUC:0.95194404822
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.2 scale_pos_weight= 4  min_child_weight= 1.2  max_depth= 8  lamda= 310
+subsamp= 0.6  col_bytree= 0.6  col_bylevel= 0.5  eta= 0.12
+  best_ntree_limit:81   best_iteration= 80
+features scores: 7886
+K-S:0.597286788659
+AUC:0.878476275195
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.15 scale_pos_weight= 3  min_child_weight= 1.0  max_depth= 6  lamda= 110
+subsamp= 0.8  col_bytree= 0.5  col_bylevel= 0.7  eta= 0.01
+  best_ntree_limit:26   best_iteration= 25
+features scores: 1711
+K-S:0.462699171144
+AUC:0.794460125595
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.08 scale_pos_weight= 4  min_child_weight= 1.0  max_depth= 6  lamda= 110
+subsamp= 0.7  col_bytree= 0.5  col_bylevel= 0.6  eta= 0.12
+  best_ntree_limit:140   best_iteration= 139
+features scores: 4686
+K-S:0.66619446869
+AUC:0.914448874729
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.15 scale_pos_weight= 3  min_child_weight= 1.5  max_depth= 10  lamda= 160
+subsamp= 0.8  col_bytree= 0.7  col_bylevel= 0.8  eta= 0.01
+  best_ntree_limit:737   best_iteration= 736
+features scores: 5084
+K-S:0.673232508485
+AUC:0.914157022337
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.2 scale_pos_weight= 4  min_child_weight= 1.2  max_depth= 7  lamda= 210
+subsamp= 0.6  col_bytree= 0.8  col_bylevel= 0.7  eta= 0.18
+  best_ntree_limit:41   best_iteration= 40
+features scores: 6556
+K-S:0.587997655674
+AUC:0.873152815492
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.1 scale_pos_weight= 3  min_child_weight= 0.5  max_depth= 9  lamda= 260
+subsamp= 0.9  col_bytree= 0.6  col_bylevel= 0.5  eta= 0.05
+  best_ntree_limit:212   best_iteration= 211
+features scores: 3560
+K-S:0.664889356009
+AUC:0.912371213854
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.08 scale_pos_weight= 4  min_child_weight= 0.8  max_depth= 5  lamda= 60
+subsamp= 0.7  col_bytree= 0.5  col_bylevel= 0.6  eta= 0.1
+  best_ntree_limit:151   best_iteration= 150
+features scores: 9151
+K-S:0.643003915185
+AUC:0.899776401121
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.15 scale_pos_weight= 3  min_child_weight= 1.0  max_depth= 4  lamda= 10
+subsamp= 0.8  col_bytree= 0.7  col_bylevel= 0.8  eta= 0.12
+  best_ntree_limit:79   best_iteration= 78
+features scores: 1744
+K-S:0.588638174492
+AUC:0.874521278504
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.2 scale_pos_weight= 4  min_child_weight= 1.5  max_depth= 8  lamda= 310
+subsamp= 0.6  col_bytree= 0.8  col_bylevel= 0.7  eta= 0.01
+  best_ntree_limit:159   best_iteration= 158
+features scores: 3211
+K-S:0.498045321192
+AUC:0.826546273306
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.1 scale_pos_weight= 3  min_child_weight= 1.2  max_depth= 6  lamda= 360
+subsamp= 0.9  col_bytree= 0.6  col_bylevel= 0.5  eta= 0.18
+  best_ntree_limit:161   best_iteration= 160
+features scores: 8076
+K-S:0.680449807676
+AUC:0.920885805171
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.1 scale_pos_weight= 4  min_child_weight= 1.0  max_depth= 10  lamda= 60
+subsamp= 0.7  col_bytree= 0.6  col_bylevel= 0.6  eta= 0.01
+  best_ntree_limit:143   best_iteration= 142
+features scores: 7028
+K-S:0.551204702883
+AUC:0.854780394972
+
+data: data_bill_bank_t2_cut10_selectCD_loan_time_allSB_f43
+gamma= 0.08 scale_pos_weight= 3  min_child_weight= 1.5  max_depth= 9  lamda= 210
+subsamp= 0.8  col_bytree= 0.8  col_bylevel= 0.7  eta= 0.12
+  best_ntree_limit:141   best_iteration= 140
+features scores: 9477
+K-S:0.749357947739
+AUC:0.948066490362
+
